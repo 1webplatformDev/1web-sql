@@ -55,9 +55,11 @@ as $function$
 $function$;
 -- select * from constuctor.type_component_get_active();
 
+drop function if exists constuctor.type_component_check_unieue;
 create or replace function constuctor.type_component_check_unieue(
 	in _name varchar,
 	in _const_name varchar,
+	in _id int = null,
 	out errors_ json
 )
 	language  plpgsql
@@ -67,28 +69,75 @@ declare
 	count_const_name int;
 	error_text_const_name json = '{ "id": 1, "name": "Указанное const_name имя типа компонента занято"}';
 	error_text_name json = '{ "id": 2, "name": "Указанное имя типа компонента занято"}';
-	
+	error_array json[];
     begin 
-	    select count(*) into count_name from constuctor.type_component tc where tc.name = _name;
-	   	select count(*) into count_const_name from constuctor.type_component tc where tc.const_name  = _const_name;
-	   	
-	   if count_name <> 0 and count_const_name <> 0 then
-	   		select * into errors_ from public.create_error_json(ARRAY[error_text_const_name, error_text_name]);
-	   		return;
-	   	end if;
-	   
+	    select count(*) into count_name from constuctor.type_component tc where tc.name = _name and (id <> _id or _id is null);
+	   	select count(*) into count_const_name from constuctor.type_component tc where tc.const_name = _const_name and (id <> _id or _id is null);
+
 	   	if count_name <> 0 then
-	   		select * into errors_ from public.create_error_json(ARRAY[error_text_name]);
-	   		return;
+			error_array = array_append(error_array, error_text_name);
 	   	end if;	
 	   		
 	   	if count_const_name <> 0 then	
-	    	select * into errors_ from public.create_error_json(ARRAY[error_text_const_name]);
-	   		return;
+			error_array = array_append(error_array, error_text_const_name);
 	   	end if;
+
+		if array_length(error_array, 1) <> 0 then
+			select * into errors_ from public.create_error_json(error_array);
+			return;
+		end if;
 
 	   select * into errors_ from public.create_error_json(null, 200);
     end;
 $function$;
-
 -- select * from constuctor.type_component_check_unieue('div', 'div');
+
+drop function if exists constuctor.type_component_insert();
+create or replace function constuctor.type_component_insert(
+	in _name varchar,
+	in _const_name varchar,
+	in _description varchar,
+	out id_ int,
+	out result_ json
+)
+	language  plpgsql
+as $function$
+    begin 
+	   select * into result_ from constuctor.type_component_check_unieue(_name, _const_name);
+	   if (result_::json->'status_result')::text::int = 200 then
+	   	insert into constuctor.type_component
+        (name, const_name, description) values (_name, _const_name, _description)
+        returning id into id_;
+	   end if;
+    end;
+$function$;
+-- select * from constuctor.type_component_insert('test', 'test', 'test описание');
+
+drop function if exists constuctor.type_component_updated;
+create or replace function constuctor.type_component_updated(
+	in _id int,
+	in _name varchar,
+	in _const_name varchar,
+	in _description varchar,
+	out result_ json
+)
+	language  plpgsql
+as $function$
+	declare 
+		check_rows int;
+		error_text_const_name json = '{ "id": 3, "name": "Запись с указаным id не существует"}';
+    begin
+		select count(*) into check_rows from constuctor.type_component tc where tc.id = _id;
+		if check_rows = 0 then
+			select * into result_ from public.create_error_json(array[error_text_const_name]);
+			return;
+		end if;
+	   	select * into result_ from constuctor.type_component_check_unieue(_name, _const_name, _id);
+	   	if (result_::json->'status_result')::text::int = 200 then
+	   	 	UPDATE constuctor.type_component
+			SET name = _name, const_name = _const_name, description = _description
+			where id = _id;  
+	   	end if;
+    end;
+$function$;
+-- select * from constuctor.type_component_updated('1', 'test', 'test', 'test описание');
