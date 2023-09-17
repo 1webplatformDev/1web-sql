@@ -33,27 +33,6 @@ create type constuctor.return_type_component as (
 );
 
 -- function
-drop function if exists constuctor.type_component_get();
-create or replace function constuctor.type_component_get()
-	returns SETOF constuctor.return_type_component
-	language  plpgsql
-as $function$
-    begin 
-        return query select tc.id, tc."name", tc.description, tc.active, tc.const_name  from constuctor.type_component tc;
-    end;
-$function$;
--- select * from constuctor.type_component_get();
-
-drop function if exists constuctor.type_component_get_active();
-create or replace function constuctor.type_component_get_active()
-	returns SETOF constuctor.return_type_component
-	language  plpgsql
-as $function$
-    begin 
-        return query select * from constuctor.type_component_get() where active = true;
-    end;
-$function$;
--- select * from constuctor.type_component_get_active();
 
 drop function if exists constuctor.type_component_check_unieue;
 create or replace function constuctor.type_component_check_unieue(
@@ -71,8 +50,8 @@ declare
 	error_text_name json = '{ "id": 2, "name": "Указанное имя типа компонента занято"}';
 	error_array json[];
     begin 
-	    select count(*) into count_name from constuctor.type_component tc where tc.name = _name and (id <> _id or _id is null);
-	   	select count(*) into count_const_name from constuctor.type_component tc where tc.const_name = _const_name and (id <> _id or _id is null);
+	    select count(*) into count_name from constuctor.type_component_get_filter(_id, null, _name, null);
+	   	select count(*) into count_const_name from constuctor.type_component_get_filter(_id, null, null, _const_name);
 
 	   	if count_name <> 0 then
 			error_array = array_append(error_array, error_text_name);
@@ -127,9 +106,9 @@ as $function$
 		check_rows int;
 		error_text_const_name json = '{ "id": 3, "name": "Запись с указаным id не существует"}';
     begin
-		select count(*) into check_rows from constuctor.type_component tc where tc.id = _id;
+		select count(*) into check_rows from constuctor.type_component_get_filter(_id);
 		if check_rows = 0 then
-			select * into result_ from public.create_error_json(array[error_text_const_name]);
+			select * into result_ from public.create_error_json(array[error_text_const_name], 404);
 			return;
 		end if;
 	   	select * into result_ from constuctor.type_component_check_unieue(_name, _const_name, _id);
@@ -141,3 +120,25 @@ as $function$
     end;
 $function$;
 -- select * from constuctor.type_component_updated('1', 'test', 'test', 'test описание');
+
+drop function if exists constuctor.type_component_get_filter;
+create or replace function constuctor.type_component_get_filter(
+	_id int = null,
+	_active bool = null,
+	_name varchar = null,
+	_const_name varchar = null
+)
+	returns SETOF constuctor.return_type_component
+	language  plpgsql
+as $function$
+    begin 
+        return query 
+        	select tc.id, tc."name", tc.description, tc.active, tc.const_name  
+       		from constuctor.type_component tc 
+       		where (tc.id = _id or _id is null) 
+       		and (tc.const_name = _const_name or _const_name is null)
+       		and (tc.name = _name or _name is null)
+       		and (tc.active  = _active or _active is null);
+    end;
+$function$;
+-- select * from constuctor.type_component_get_filter(null ,null, 'Тест2', null);
