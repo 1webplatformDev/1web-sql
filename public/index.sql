@@ -1,3 +1,5 @@
+CREATE SCHEMA public AUTHORIZATION postgres;
+
 -- function
 drop function if exists public.create_error_json;
 create or replace function public.create_error_json(

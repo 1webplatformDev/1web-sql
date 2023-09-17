@@ -8,7 +8,7 @@ create table constuctor.type_component (
 	"name" varchar not null, -- Название типа компонента
 	description varchar null, -- Описание типа компонента
 	active bool not null default true, -- Актуальность типа компонента
-	const_name varchar not null
+	const_name varchar not null -- 'Программное название типа компонента'
 );
 
 create unique index type_component_const_name_idx on constuctor.type_component using btree (const_name);
@@ -20,6 +20,7 @@ comment on column constuctor.type_component.id is 'Первичный ключ';
 comment on column constuctor.type_component."name" is 'Название типа компонента';
 comment on column constuctor.type_component.description is 'Описание типа компонента';
 comment on column constuctor.type_component.active is 'Актуальность типа компонента';
+comment on column constuctor.type_component.active is 'Программное название типа компонента';
 
 -- type
 
@@ -142,3 +143,26 @@ as $function$
     end;
 $function$;
 -- select * from constuctor.type_component_get_filter(null ,null, 'Тест2', null);
+
+drop function if exists constuctor.type_component_get_unique;
+create or replace function constuctor.type_component_get_unique(
+	_column_name varchar,
+	_id int = null,
+	_active bool = null,
+	_name varchar = null,
+	_const_name varchar = null
+)
+	returns table(id int, name varchar) 
+	language  plpgsql
+as $function$
+    begin 
+	    if _column_name in ('name', 'const_name') then
+	    	return query EXECUTE 
+	    		format(
+	    			'select id, %s from (select * from constuctor.type_component_get_filter(%2$L, %3$L, %4$L, %5$L)) as tc', 
+					_column_name, _id, _active, _name, _const_name
+				);
+	    end if;
+    end;
+$function$;
+--   select * from constuctor.type_component_get_unique('name', 1 ,null, null, null);
