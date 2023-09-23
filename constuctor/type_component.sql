@@ -1,6 +1,6 @@
 -- Очистка
 
- drop table if exists constuctor.type_component cascade;
+drop table if exists constuctor.type_component cascade;
 -- ALTER SEQUENCE constuctor.type_component_id_seq RESTART WITH 1;
 
 create table constuctor.type_component (
