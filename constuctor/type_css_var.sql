@@ -10,18 +10,18 @@ create table constuctor.type_css_var (
 	active bool not null default true, -- Актуальность типа css переменной
 	const_name varchar not null -- 'Программное название типа css переменной'
 );
-comment on table constuctor.type_css_var is 'Тип css переменой';
 
 create unique index type_css_var_idx on constuctor.type_css_var using btree (const_name);
 create unique index type_css_var_name_idx on constuctor.type_css_var using btree (name);
 
--- Column comments
+-- comments
+comment on table constuctor.type_css_var is 'Тип css переменой';
 
-comment on column constuctor.type_component.id is 'Первичный ключ';
-comment on column constuctor.type_component."name" is 'Название типа css переменной';
-comment on column constuctor.type_component.description is 'Описание типа css переменной';
-comment on column constuctor.type_component.active is 'Актуальность типа css переменной';
-comment on column constuctor.type_component.active is 'Программное название типа css переменной';
+comment on column constuctor.type_css_var.id is 'Первичный ключ';
+comment on column constuctor.type_css_var."name" is 'Название типа css переменной';
+comment on column constuctor.type_css_var.description is 'Описание типа css переменной';
+comment on column constuctor.type_css_var.active is 'Актуальность типа css переменной';
+comment on column constuctor.type_css_var.const_name is 'Программное название типа css переменной';
 
 -- type
 drop type if exists constuctor.return_type_css_var cascade;

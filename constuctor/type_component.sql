@@ -11,18 +11,18 @@ create table constuctor.type_component (
 	const_name varchar not null -- 'Программное название типа компонента'
 );
 
-comment on table constuctor.type_component IS 'Тип компонента';
-
+ 
 create unique index type_component_const_name_idx on constuctor.type_component using btree (const_name);
 create unique index type_component_name_idx on constuctor.type_component using btree (name);
 
--- Column comments
+--  comments
+comment on table constuctor.type_component IS 'Тип компонента';
 
 comment on column constuctor.type_component.id is 'Первичный ключ';
 comment on column constuctor.type_component."name" is 'Название типа компонента';
 comment on column constuctor.type_component.description is 'Описание типа компонента';
 comment on column constuctor.type_component.active is 'Актуальность типа компонента';
-comment on column constuctor.type_component.active is 'Программное название типа компонента';
+comment on column constuctor.type_component.const_name is 'Программное название типа компонента';
 
 -- type
 
