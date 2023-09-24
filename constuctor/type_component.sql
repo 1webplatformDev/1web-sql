@@ -8,7 +8,8 @@ create table constuctor.type_component (
 	"name" varchar not null, -- Название типа компонента
 	description varchar null, -- Описание типа компонента
 	active bool not null default true, -- Актуальность типа компонента
-	const_name varchar not null -- 'Программное название типа компонента'
+	const_name varchar not null, -- 'Программное название типа компонента'
+	CONSTRAINT type_component_pk PRIMARY KEY (id)
 );
 
  

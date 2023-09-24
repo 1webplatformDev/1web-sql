@@ -8,7 +8,8 @@ create table constuctor.type_css_var (
 	"name" varchar not null, -- Название типа css переменной
 	description varchar null, -- Описание типа css переменной
 	active bool not null default true, -- Актуальность типа css переменной
-	const_name varchar not null -- 'Программное название типа css переменной'
+	const_name varchar not null, -- 'Программное название типа css переменной'
+	CONSTRAINT type_css_var_pk PRIMARY KEY (id)
 );
 
 create unique index type_css_var_idx on constuctor.type_css_var using btree (const_name);

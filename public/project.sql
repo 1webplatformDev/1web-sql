@@ -7,7 +7,8 @@ create table public.project (
 	"name" varchar not null, -- Название проекта
 	description varchar null, -- Описание проекта
 	active bool not null default true, -- Актуальность проекта
-	const_name varchar not null -- 'Программное название проекта'
+	const_name varchar not null, -- 'Программное название проекта'
+	CONSTRAINT project_pk PRIMARY KEY (id)
 );
 
 comment on table public.project IS 'Тип проекта';
@@ -16,7 +17,7 @@ create unique index project_const_name_idx on public.project using btree (const_
 create unique index project_name_idx on public.project using btree (name);
 
 --  comments
-comment on table public.project IS 'Тип проектов';
+comment on table public.project IS 'Проекты';
 
 comment on column public.project.id is 'Первичный ключ';
 comment on column public.project."name" is 'Название проека';

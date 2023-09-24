@@ -7,7 +7,8 @@ create table public.type_project (
 	"name" varchar not null, -- Название типа проекта
 	description varchar null, -- Описание типа проекта
 	active bool not null default true, -- Актуальность типа проекта
-	const_name varchar not null -- 'Программное название типа проекта'
+	const_name varchar not null, -- 'Программное название типа проекта'
+	CONSTRAINT type_project_pk PRIMARY KEY (id)
 );
 
 comment on table public.type_project IS 'Тип проекта';
@@ -23,3 +24,7 @@ comment on column public.type_project."name" is 'Название типа пр�
 comment on column public.type_project.description is 'Описание типа проектов';
 comment on column public.type_project.active is 'Актуальность типа проектов';
 comment on column public.type_project.const_name is 'Программное название типа проектов';
+
+
+-- dataset
+INSERT INTO public.type_project ("name", description, active, const_name) VALUES('БД', 'Основная база данных разработки', true, 'database');

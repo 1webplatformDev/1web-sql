@@ -4,7 +4,8 @@ drop table if exists public.errors cascade;
 create table public.errors (
 	id int4 not null generated always as identity, -- Первичный ключ
 	"name" varchar not null, -- Название ошибки
-	description varchar null -- Описание ошибки
+	description varchar null, -- Описание ошибки
+	CONSTRAINT error_pk PRIMARY KEY (id)
 );
 
 --  comments
