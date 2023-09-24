@@ -7,7 +7,13 @@ create table public.errors (
 	description varchar null -- Описание ошибки
 );
 
-comment on table constuctor.type_component IS 'Ошибки';
+--  comments
+comment on table public.errors IS 'Ошибки';
+
+comment on column public.errors.id is 'Первичный ключ';
+comment on column public.errors."name" is 'Название ошибки';
+comment on column public.errors.description is 'Описание ошибки';
+ 
 
 -- function
 drop function if exists public.create_error_json;

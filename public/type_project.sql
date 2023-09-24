@@ -14,3 +14,12 @@ comment on table public.type_project IS 'Тип проекта';
 
 create unique index type_project_const_name_idx on public.type_project using btree (const_name);
 create unique index type_project_name_idx on public.type_project using btree (name);
+
+--  comments
+comment on table public.type_project IS 'Тип проектов';
+
+comment on column public.type_project.id is 'Первичный ключ';
+comment on column public.type_project."name" is 'Название типа проектов';
+comment on column public.type_project.description is 'Описание типа проектов';
+comment on column public.type_project.active is 'Актуальность типа проектов';
+comment on column public.type_project.const_name is 'Программное название типа проектов';
