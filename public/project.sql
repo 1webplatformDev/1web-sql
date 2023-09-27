@@ -30,4 +30,5 @@ comment on column public.project.id_type_project is 'Внешний ключ т�
 
 -- dataset
 ALTER SEQUENCE public.type_project_id_seq RESTART WITH 1;
-insert into public.project ("name", description, active, const_name, id_type_project) VALUES('Основная бд', 'Основная база данных разработки sql на postgresql', true, '1-web-sql', 1);
+insert into public.project (id, "name", description, active, const_name, id_type_project) 
+overriding system value values (1, 'Основная бд', 'Основная база данных разработки sql на postgresql', true, '1-web-sql', 1);
