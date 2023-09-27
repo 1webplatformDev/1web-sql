@@ -9,7 +9,7 @@ create table constuctor.type_component (
 	description varchar null, -- Описание типа компонента
 	active bool not null default true, -- Актуальность типа компонента
 	const_name varchar not null, -- 'Программное название типа компонента'
-	CONSTRAINT type_component_pk PRIMARY KEY (id)
+	constraint type_component_pk primary key (id)
 );
 
  
@@ -17,7 +17,7 @@ create unique index type_component_const_name_idx on constuctor.type_component u
 create unique index type_component_name_idx on constuctor.type_component using btree (name);
 
 --  comments
-comment on table constuctor.type_component IS 'Тип компонента';
+comment on table constuctor.type_component is 'Тип компонента';
 
 comment on column constuctor.type_component.id is 'Первичный ключ';
 comment on column constuctor.type_component."name" is 'Название типа компонента';

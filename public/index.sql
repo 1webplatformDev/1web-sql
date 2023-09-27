@@ -1,3 +1,3 @@
-CREATE SCHEMA public AUTHORIZATION postgres;
+create schema public authorization postgres;
 
  

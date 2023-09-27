@@ -5,11 +5,11 @@ create table public.errors (
 	id int4 not null generated always as identity, -- Первичный ключ
 	"name" varchar not null, -- Название ошибки
 	description varchar null, -- Описание ошибки
-	CONSTRAINT error_pk PRIMARY KEY (id)
+	constraint error_pk primary key (id)
 );
 
 --  comments
-comment on table public.errors IS 'Ошибки';
+comment on table public.errors is 'Ошибки';
 
 comment on column public.errors.id is 'Первичный ключ';
 comment on column public.errors."name" is 'Название ошибки';

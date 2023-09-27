@@ -1,2 +1,2 @@
-CREATE SCHEMA constuctor AUTHORIZATION postgres;
-COMMENT ON SCHEMA constuctor IS 'Схема для работы с конструктором';
+create schema constuctor authorization postgres;
+comment on schema constuctor is 'Схема для работы с конструктором';
