@@ -28,6 +28,6 @@ comment on column public.type_project.const_name is 'Программное на
 
 -- dataset
 ALTER SEQUENCE public.type_project_id_seq RESTART WITH 1;
-insert intopublic.type_project ("name", description, active, const_name) VALUES('БД', 'База данных разработки', true, 'database');
-insert intopublic.type_project ("name", description, active, const_name) VALUES('Графический интерфейс пользователя', 'Графический интерфейс пользователя', true, 'gui');
-insert intopublic.type_project ("name", description, active, const_name) VALUES('REST API', 'Сервис для обмена данных по HTTP запросам', true, 'restApi');
+insert into public.type_project ("name", description, active, const_name) VALUES('БД', 'База данных разработки', true, 'database');
+insert into public.type_project ("name", description, active, const_name) VALUES('Графический интерфейс пользователя', 'Графический интерфейс пользователя', true, 'gui');
+insert into public.type_project ("name", description, active, const_name) VALUES('REST API', 'Сервис для обмена данных по HTTP запросам', true, 'restApi');
