@@ -50,23 +50,23 @@ create or replace function constuctor.type_component_check_unieue(
 declare
 	count_name int;
 	count_const_name int;
-	error_text_const_name json = '{ "id": 1, "name": "Указанное const_name имя типа компонента занято"}';
-	error_text_name json = '{ "id": 2, "name": "Указанное имя типа компонента занято"}';
-	error_array json[];
+	error_id_const_name int = 1;
+	error_id_name int = 2;
+	error_array int[];
     begin 
-	    select count(*) into count_name from constuctor.type_component_get_filter(_id, null, _name, null);
-	   	select count(*) into count_const_name from constuctor.type_component_get_filter(_id, null, null, _const_name);
+	    select count(*) into count_name from constuctor.type_component_get_filter(null, null, _name, null, _id);
+	   	select count(*) into count_const_name from constuctor.type_component_get_filter(null, null, null, _const_name, _id);
 
 	   	if count_name <> 0 then
-			error_array = array_append(error_array, error_text_name);
+			error_array = array_append(error_array, error_id_const_name);
 	   	end if;	
 	   		
 	   	if count_const_name <> 0 then	
-			error_array = array_append(error_array, error_text_const_name);
+			error_array = array_append(error_array, error_id_name);
 	   	end if;
 
 		if array_length(error_array, 1) <> 0 then
-			select * into errors_ from public.create_error_json(error_array);
+			select * into errors_ from public.create_error_ids(error_array, 400);
 			return;
 		end if;
 
@@ -108,11 +108,11 @@ create or replace function constuctor.type_component_updated(
 as $function$
 	declare 
 		check_rows int;
-		error_text_const_name json = '{ "id": 3, "name": "Запись с указаным id не существует"}';
+		error_id_const_name int = 3;
     begin
 		select count(*) into check_rows from constuctor.type_component_get_filter(_id);
 		if check_rows = 0 then
-			select * into result_ from public.create_error_json(array[error_text_const_name], 404);
+			select * into result_ from public.create_error_ids(array[error_id_const_name], 404);
 			return;
 		end if;
 	   	select * into result_ from constuctor.type_component_check_unieue(_name, _const_name, _id);
@@ -130,7 +130,8 @@ create or replace function constuctor.type_component_get_filter(
 	_id int = null,
 	_active bool = null,
 	_name varchar = null,
-	_const_name varchar = null
+	_const_name varchar = null,
+	_no_id int = null
 )
 	returns SETOF constuctor.return_type_component
 	language  plpgsql
@@ -140,6 +141,7 @@ as $function$
         	select tc.id, tc."name", tc.description, tc.active, tc.const_name  
        		from constuctor.type_component tc 
        		where (tc.id = _id or _id is null) 
+			and (tc.id <> _no_id or _no_id is null) 
        		and (tc.const_name = _const_name or _const_name is null)
        		and (tc.name = _name or _name is null)
        		and (tc.active  = _active or _active is null);
