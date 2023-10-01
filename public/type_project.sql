@@ -37,3 +37,6 @@ overriding system value values(2, 'Графический интерфейс п�
 
 insert into public.type_project (id, "name", description, active, const_name) 
 overriding system value values(3, 'REST API', 'Сервис для обмена данных по HTTP запросам', true, 'restApi');
+
+insert into public.type_project (id, "name", description, active, const_name) 
+overriding system value values(4, 'Система', 'Наименование системы хранящей в базе', true, 'system');
