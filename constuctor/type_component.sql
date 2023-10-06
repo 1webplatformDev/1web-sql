@@ -54,12 +54,12 @@ create or replace function constuctor.type_component_check_unieue(
 )
 	language  plpgsql
 	as $function$
-declare
-	count_name int;
-	count_const_name int;
-	error_id_const_name int = 1;
-	error_id_name int = 2;
-	error_array int[];
+	declare
+		count_name int;
+		count_const_name int;
+		error_id_const_name int = 1;
+		error_id_name int = 2;
+		error_array int[];
     begin 
 	    select count(*) into count_name from constuctor.type_component_get_filter(null, null, _name, null, _id);
 	   	select count(*) into count_const_name from constuctor.type_component_get_filter(null, null, null, _const_name, _id);
@@ -110,7 +110,7 @@ create or replace function constuctor.type_component_updated(
 	out result_ json
 )
 	language  plpgsql
-as $function$
+	as $function$
 	declare 
 		check_rows int;
 		error_id_const_name int = 3;
@@ -139,7 +139,7 @@ create or replace function constuctor.type_component_get_filter(
 )
 	returns SETOF constuctor.return_type_component
 	language  plpgsql
-as $function$
+	as $function$
     begin 
         return query 
         	select tc.id, tc."name", tc.description, tc.active, tc.const_name  
@@ -162,7 +162,7 @@ create or replace function constuctor.type_component_get_unique(
 )
 	returns table(id int, name varchar) 
 	language  plpgsql
-as $function$
+	as $function$
     begin 
 	    if _column_name in ('name', 'const_name') then
 	    	return query EXECUTE 

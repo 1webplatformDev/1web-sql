@@ -37,7 +37,7 @@ create or replace function public.create_error_json(
 )
 	returns json
 	language  plpgsql
-as $function$
+	as $function$
     begin 
     	return json_build_object('errors', _error, 'status_result', _status); 
 	end;
@@ -48,8 +48,8 @@ drop function if exists public.create_error_ids;
 create or replace function public.create_error_ids(_ids int[], _status int = null)
 returns json
 	language  plpgsql
-as $function$
-	declare
+	as $function$
+	declare	
 		errors json[] = (select ARRAY(select row_to_json(res) from (
 			select e.id, e.name, e.description from public.errors e where e.id = any(_ids)) as res 
 		));
