@@ -1,5 +1,12 @@
--- Очистка
+-- fun
 
+-- select * from constuctor.type_component_check_unieue('div', 'div');
+-- select * from constuctor.type_component_insert('test', 'test', 'test описание');s
+-- select * from constuctor.type_component_get_unique('name', 1 ,null, null, null);
+-- select * from constuctor.type_component_updated('1', 'test', 'test', 'test описание');
+-- select * from constuctor.type_component_get_filter(null ,null, 'Тест2', null);
+
+-- Очистка
 drop table if exists constuctor.type_component cascade;
 -- ALTER SEQUENCE constuctor.type_component_id_seq RESTART WITH 1;
 
@@ -9,10 +16,10 @@ create table constuctor.type_component (
 	description varchar null, -- Описание типа компонента
 	active bool not null default true, -- Актуальность типа компонента
 	const_name varchar not null, -- 'Программное название типа компонента'
+
 	constraint type_component_pk primary key (id)
 );
 
- 
 create unique index type_component_const_name_idx on constuctor.type_component using btree (const_name);
 create unique index type_component_name_idx on constuctor.type_component using btree (name);
 
@@ -73,7 +80,6 @@ declare
 	   select * into errors_ from public.create_error_json(null, 200);
     end;
 $function$;
--- select * from constuctor.type_component_check_unieue('div', 'div');
 
 drop function if exists constuctor.type_component_insert();
 create or replace function constuctor.type_component_insert(
@@ -84,7 +90,7 @@ create or replace function constuctor.type_component_insert(
 	out result_ json
 )
 	language  plpgsql
-as $function$
+	as $function$
     begin 
 	   select * into result_ from constuctor.type_component_check_unieue(_name, _const_name);
 	   if (result_::json->'status_result')::text::int = 200 then
@@ -94,7 +100,6 @@ as $function$
 	   end if;
     end;
 $function$;
--- select * from constuctor.type_component_insert('test', 'test', 'test описание');
 
 drop function if exists constuctor.type_component_updated;
 create or replace function constuctor.type_component_updated(
@@ -123,7 +128,6 @@ as $function$
 	   	end if;
     end;
 $function$;
--- select * from constuctor.type_component_updated('1', 'test', 'test', 'test описание');
 
 drop function if exists constuctor.type_component_get_filter;
 create or replace function constuctor.type_component_get_filter(
@@ -147,7 +151,6 @@ as $function$
        		and (tc.active  = _active or _active is null);
     end;
 $function$;
--- select * from constuctor.type_component_get_filter(null ,null, 'Тест2', null);
 
 drop function if exists constuctor.type_component_get_unique;
 create or replace function constuctor.type_component_get_unique(
@@ -170,4 +173,3 @@ as $function$
 	    end if;
     end;
 $function$;
---   select * from constuctor.type_component_get_unique('name', 1 ,null, null, null);

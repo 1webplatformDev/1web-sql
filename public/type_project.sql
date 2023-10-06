@@ -1,5 +1,4 @@
 -- Очистка
-
 drop table if exists public.type_project cascade;
 
 create table public.type_project (
@@ -8,10 +7,9 @@ create table public.type_project (
 	description varchar null, -- Описание типа проекта
 	active bool not null default true, -- Актуальность типа проекта
 	const_name varchar not null, -- 'Программное название типа проекта'
+	
 	constraint type_project_pk primary key (id)
 );
-
-comment on table public.type_project is 'Тип проекта';
 
 create unique index type_project_const_name_idx on public.type_project using btree (const_name);
 create unique index type_project_name_idx on public.type_project using btree (name);
