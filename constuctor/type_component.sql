@@ -173,3 +173,82 @@ create or replace function constuctor.type_component_get_unique(
 	    end if;
     end;
 $function$;
+
+-- dataset 
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(1, 'Блочный элемент', 'Блочный элемент', true, 'div');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(2, 'Текстовый элемент', 'Текстовый элемент', true, 'span');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(3, 'Поле ввода', 'Поле ввода', true, 'input');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(4, 'Выпадающий список', 'Выпадающий список', true, 'select');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(5, 'Пункты списка', 'Пункты списка', true, 'option');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(6, 'Таблица', 'Таблица', true, 'table');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(7, 'Изображение', 'Изображение', true, 'img');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(8, 'Чекбокс ', 'Флажок, флаговая кнопка, чекбокс', true, 'chekcbox');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(9, 'Кнопка', 'Кнопка', true, 'button');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(10, 'Многострочное поле ввода', 'Многострочное поле ввода', true, 'textarea');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(11, 'Метка', 'Подпись к элементу пользовательского интерфейса', true, 'label');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(12, 'Поле ввода файла', 'Поле ввода файла', true, 'file');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(13, 'Поле ввода цвета', 'Поле ввода цвета', true, 'color');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(14, 'Группа радиокнопок', 'Группа радиокнопок', true, 'radio');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(15, 'Переключатель', 'Переключатель', true, 'toggle');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(16, 'Форма', 'Форма ', true, 'form');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(17, 'Аккордеон', 'Контейнер со сворачиваемыми вкладками', true, 'accordion');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(18, 'Сообщение', 'Сообщение', true, 'alert');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(19, 'Всплывающиее окно', 'Всплывающиее окно', true, 'popover');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(20, 'Модальная форма', 'Модальная форма', true, 'modal');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(21, 'Ссылка', 'Ссылка на другую страницу', true, 'link');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(22, 'Заголовки', 'Заголовки', true, 'h');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(23, 'Вопрос', 'Окно задающий вопрос пользователю', true, 'message');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(24, 'Прелоадер', 'Элемент показывающий загрузку происходящего', true, 'preloader');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(25, 'Вкладки', 'Вкладки, показывают контент закрепленный за ними', true, 'tab');
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(26, 'График', 'График', true, 'chart')
