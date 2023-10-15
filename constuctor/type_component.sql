@@ -1,10 +1,10 @@
 -- fun
 
--- select * from constuctor.type_component_check_unieue('div', 'div');
--- select * from constuctor.type_component_insert('test', 'test', 'test описание');s
--- select * from constuctor.type_component_get_unique('name', 1 ,null, null, null);
--- select * from constuctor.type_component_updated('1', 'test', 'test', 'test описание');
--- select * from constuctor.type_component_get_filter(null ,null, 'Тест2', null);
+-- select * from constuctor.type_component_check_unieue;
+-- select * from constuctor.type_component_insert;
+-- select * from constuctor.type_component_get_unique;
+-- select * from constuctor.type_component_updated;
+-- select * from constuctor.type_component_get_filter;
 
 -- Очистка
 drop table if exists constuctor.type_component cascade;
@@ -92,11 +92,11 @@ create or replace function constuctor.type_component_insert(
 	language  plpgsql
 	as $function$
     begin 
-	   select * into result_ from constuctor.type_component_check_unieue(_name, _const_name);
-	   if (result_::json->'status_result')::text::int = 200 then
-	   	insert into constuctor.type_component
-        (name, const_name, description) values (_name, _const_name, _description)
-        returning id into id_;
+		select * into result_ from constuctor.type_component_check_unieue(_name, _const_name);
+		if (result_::json->'status_result')::text::int = 200 then
+			insert into constuctor.type_component
+        	(name, const_name, description) values (_name, _const_name, _description)
+        	returning id into id_;
 	   end if;
     end;
 $function$;
@@ -113,11 +113,11 @@ create or replace function constuctor.type_component_updated(
 	as $function$
 	declare 
 		check_rows int;
-		error_id_const_name int = 3;
+		error_id int = 3;
     begin
 		select count(*) into check_rows from constuctor.type_component_get_filter(_id);
 		if check_rows = 0 then
-			select * into result_ from public.create_error_ids(array[error_id_const_name], 404);
+			select * into result_ from public.create_error_ids(array[error_id], 404);
 			return;
 		end if;
 	   	select * into result_ from constuctor.type_component_check_unieue(_name, _const_name, _id);
