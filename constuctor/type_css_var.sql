@@ -146,3 +146,17 @@ create or replace function constuctor.type_css_var_updated(
 $function$;
 
 -- dataset
+insert into constuctor.type_css_var(id, name, description, active, const_name)
+overriding system value values(1, 'Единица измерения', 'Размер ширины, высоты, позиции элементов и др. что вводится значения число и ед. размера(px, %, em,rem и тд) ', true, 'size');
+
+insert into constuctor.type_css_var(id, name, description, active, const_name)
+overriding system value values(2, 'Граница', 'Граница', true, 'border');
+
+insert into constuctor.type_css_var(id, name, description, active, const_name)
+overriding system value values(3, 'Цвет', 'Цвет', true, 'color');
+
+insert into constuctor.type_css_var(id, name, description, active, const_name)
+overriding system value values(4, 'Отступы', 'Отступы', true, 'margin/padding');
+
+insert into constuctor.type_css_var(id, name, description, active, const_name)
+overriding system value values(5, 'Список значении', 'Свойство с ограниченным списком значения', true, 'select')
