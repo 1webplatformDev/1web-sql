@@ -4,6 +4,7 @@
 --select * from constuctor.type_css_var_insert;
 --select * from constuctor.type_css_var_get_filter;
 --select * from constuctor.type_css_var_updated;
+--select * from constuctor.type_css_var_check_id;
 
 -- Очистка
 
@@ -74,8 +75,8 @@ create or replace function constuctor.type_css_var_check_unieue(
 		error_id_const_name int = 6;
 		error_array int[];
 	begin
-		select count(*) into count_name from constuctor.type_css_var_get_filter(_name => _name, _id => _id);
-		select count(*) into count_const_name from constuctor.type_css_var_get_filter(_const_name => _const_name, _id => _id);
+		select count(*) into count_name from constuctor.type_css_var_get_filter(_name => _name, no_id => _id);
+		select count(*) into count_const_name from constuctor.type_css_var_get_filter(_const_name => _const_name, no_id => _id);
 
 		if count_name <> 0 then
 			error_array = array_append(error_array, error_id_name);
@@ -126,13 +127,9 @@ create or replace function constuctor.type_css_var_updated(
 )
 	language plpgsql
 	as $function$
-	declare
-		check_rows int;
-		error_id int =  4;
 	begin
-		select count(*) into check_rows from constuctor.type_css_var_get_filter(_id => _id);
-		if check_rows = 0 then
-			select * into result_ from public.create_error_ids(array[error_id], 404);
+		select * into result_ from constuctor.type_css_var_check_id(_id => _id);
+		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
 
@@ -145,7 +142,27 @@ create or replace function constuctor.type_css_var_updated(
 	end;
 $function$;
 
+drop function if exists constuctor.type_css_var_check_id;
+create or replace function constuctor.type_css_var_check_id(
+	in _id int4,
+	out result_ json
+)
+	language plpgsql
+	as $function$
+	declare
+		check_rows int;
+		error_id int = 4;
+	begin
+		select * into result_ from public.create_error_ids(null, 200);
+		select count(*) into check_rows from constuctor.type_css_var_get_filter(_id => _id);
+		if check_rows = 0 then
+			select * into result_ from public.create_error_ids(array[error_id], 404);
+		end if;
+	end;
+$function$;
+
 -- dataset
+
 insert into constuctor.type_css_var(id, name, description, active, const_name)
 overriding system value values(1, 'Единица измерения', 'Размер ширины, высоты, позиции элементов и др. что вводится значения число и ед. размера(px, %, em,rem и тд) ', true, 'size');
 
