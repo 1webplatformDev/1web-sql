@@ -75,8 +75,8 @@ create or replace function constuctor.type_css_var_check_unieue(
 		error_id_const_name int = 6;
 		error_array int[];
 	begin
-		select count(*) into count_name from constuctor.type_css_var_get_filter(_name => _name, no_id => _id);
-		select count(*) into count_const_name from constuctor.type_css_var_get_filter(_const_name => _const_name, no_id => _id);
+		select count(*) into count_name from constuctor.type_css_var_get_filter(_name => _name, _no_id => _id);
+		select count(*) into count_const_name from constuctor.type_css_var_get_filter(_const_name => _const_name, _no_id => _id);
 
 		if count_name <> 0 then
 			error_array = array_append(error_array, error_id_name);
@@ -160,20 +160,3 @@ create or replace function constuctor.type_css_var_check_id(
 		end if;
 	end;
 $function$;
-
--- dataset
-
-insert into constuctor.type_css_var(id, name, description, active, const_name)
-overriding system value values(1, 'Единица измерения', 'Размер ширины, высоты, позиции элементов и др. что вводится значения число и ед. размера(px, %, em,rem и тд) ', true, 'size');
-
-insert into constuctor.type_css_var(id, name, description, active, const_name)
-overriding system value values(2, 'Граница', 'Граница', true, 'border');
-
-insert into constuctor.type_css_var(id, name, description, active, const_name)
-overriding system value values(3, 'Цвет', 'Цвет', true, 'color');
-
-insert into constuctor.type_css_var(id, name, description, active, const_name)
-overriding system value values(4, 'Отступы', 'Отступы', true, 'margin/padding');
-
-insert into constuctor.type_css_var(id, name, description, active, const_name)
-overriding system value values(5, 'Список значении', 'Свойство с ограниченным списком значения', true, 'select')
