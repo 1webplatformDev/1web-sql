@@ -5,6 +5,7 @@
 -- select * from constuctor.type_component_get_unique;
 -- select * from constuctor.type_component_updated;
 -- select * from constuctor.type_component_get_filter;
+-- select * from constuctor.type_component_check_id
 
 -- Очистка
 drop table if exists constuctor.type_component cascade;
@@ -172,6 +173,25 @@ create or replace function constuctor.type_component_get_unique(
 				);
 	    end if;
     end;
+$function$;
+
+drop function if exists constuctor.type_component_check_id;
+create or replace function constuctor.type_component_check_id(
+	in _id int4,
+	out result_ json
+)
+	language plpgsql
+	as $function$
+	declare
+		check_rows int;
+		error_id int = 3;
+	begin
+		select * into result_ from public.create_error_ids(null, 200);
+		select count(*) into check_rows from constuctor.type_component_get_filter(_id => _id);
+		if check_rows = 0 then
+			select * into result_ from public.create_error_ids(array[error_id], 404);
+		end if;
+	end;
 $function$;
 
 -- dataset 
