@@ -66,13 +66,19 @@ insert into public.errors (id, "name", description, id_proekt, status)
 overriding system value values (2, 'Указанное имя типа компонента уже существует', null, 2, 400);
 
 insert into public.errors (id, "name", description, id_proekt, status) 
-overriding system value values (3, 'Запись с указаным id не существует', null, 2, 404);
+overriding system value values (3, 'Запись компонента с указаным id не существует', null, 2, 404);
 
 insert into public.errors (id, "name", description, id_proekt, status)
-overriding system value values (4, 'Запись с указаным id не существует', null, 2, 404);
+overriding system value values (4, 'Запись типа css с указаным id не существует', null, 2, 404);
 
 insert into public.errors (id, "name", description, id_proekt, status)
 overriding system value values (5, 'Указанное имя типа css переменной уже существует', null, 2, 400);
 
 insert into public.errors (id, "name", description, id_proekt, status)
 overriding system value values (6, 'Указанное const_name типа css переменной уже существует', null, 2, 400);
+
+insert into public.errors (id, "name", description, id_proekt, status)
+overriding system value values (7, 'Запись css class с указаным id не существует', null, 2, 404);
+
+insert into public.errors (id, "name", description, id_proekt, status)
+overriding system value values (8, 'Указанное имя css class уже существует', null, 2, 400);
