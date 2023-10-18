@@ -5,6 +5,7 @@
 --select * from constuctor.css_class_get_filter;
 --select * from constuctor.css_class_updated;
 --select * from constuctor.css_class_check_id;
+--select * from constuctor.css_class_get_tc;
 
 -- Очистка
 
@@ -160,4 +161,40 @@ create or replace function constuctor.css_class_check_id(
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 		end if;
 	end;
+$function$;
+
+drop function if exists constuctor.css_class_get_tc;
+create or replace function constuctor.css_class_get_tc(
+	_id_type_component int[] = null,
+	_class_name varchar = null,
+	_limit int = null,
+	_offset int = null
+)
+	returns table (
+		id int, 
+		id_type_component int, 
+		class_name varchar, 
+		description varchar, 
+		active boolean, 
+		tc_name varchar,
+		tc_description varchar,
+		tc_active boolean,
+		tc_const_name varchar
+		)
+	language plpgsql
+	as $function$
+	begin
+		return query 
+		select cc.*, 
+			tc."name" as tc_name, 
+			tc.description as tc_description,
+			tc.active as tc_active,
+			tc.const_name as tc_const_name
+		from constuctor.css_class cc 
+		left join constuctor.type_component tc on tc.id = cc.id_type_component
+		where 
+			((cc.class_name like '%' || _class_name || '%') or _class_name is null)
+			and (cc.id_type_component = any(_id_type_component) or _id_type_component is null)
+		limit _limit offset _offset;
+	end
 $function$;
