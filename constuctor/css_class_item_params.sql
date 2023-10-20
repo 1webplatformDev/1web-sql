@@ -13,7 +13,7 @@ drop table if exists constuctor.css_class_item_params cascade;
 
 create table constuctor.css_class_item_params (
     id int4 generated always as identity, -- Первичный ключ
-    id_params_css_class int4 not null REFERENCES constuctor.params_css_class (id), -- Внешний ключ таблицы params_css_class
+    id_params_css_class int4 not null REFERENCES constuctor.css_class_list_params (id), -- Внешний ключ таблицы css_class_list_params
     name varchar not null, -- Имя элемента списка для параметра css класса
     value varchar not null, -- const_name элемента списка для параметра css класса
     description varchar, -- Описание элемента списка для параметра css класса
@@ -24,7 +24,7 @@ create table constuctor.css_class_item_params (
 comment on table constuctor.css_class_item_params is 'Элемент список для css параметров класса';
 
 comment on column constuctor.css_class_item_params.id is 'Первичный ключ';
-comment on column constuctor.css_class_item_params.id_params_css_class is 'Внешний ключ таблицы params_css_class';
+comment on column constuctor.css_class_item_params.id_params_css_class is 'Внешний ключ таблицы css_class_list_params';
 comment on column constuctor.css_class_item_params.name is 'Имя элемента списка для параметра css класса';
 comment on column constuctor.css_class_item_params.value is 'const_name элемента списка для параметра css класса';
 comment on column constuctor.css_class_item_params.description is 'Описание элемента списка для параметра css класса';
@@ -92,7 +92,7 @@ create or replace function constuctor.css_class_item_params_insert(
 	language plpgsql
 	as $function$
 	begin
-		select * into result_ from constuctor.params_css_class_check_id(_id => _id_params_css_class);
+		select * into result_ from constuctor.css_class_list_params_check_id(_id => _id_params_css_class);
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
@@ -124,7 +124,7 @@ create or replace function constuctor.css_class_item_params_updated(
 			return;
 		end if;
 
-		select * into result_ from constuctor.params_css_class_check_id(_id => _id_params_css_class);
+		select * into result_ from constuctor.css_class_list_params_check_id(_id => _id_params_css_class);
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
@@ -156,3 +156,26 @@ create or replace function constuctor.css_class_item_params_check_id(
 		end if;
 	end;
 $function$;
+
+-- dataset 
+
+insert into constuctor.css_class_item_params(id, id_params_css_class, name, value, description, active)
+overriding system value values(1, 1, 'Центр', 'center', 'Выравнивание по центру', true);
+
+insert into constuctor.css_class_item_params(id, id_params_css_class, name, value, description, active)
+overriding system value values(2, 1, 'Справо', 'start', 'Выравнивание справо', true);
+
+insert into constuctor.css_class_item_params(id, id_params_css_class, name, value, description, active)
+overriding system value values(3, 1, 'Слево', 'end', 'Выравнивание слево', true);
+
+insert into constuctor.css_class_item_params(id, id_params_css_class, name, value, description, active)
+overriding system value values(4, 2, 'Центр', 'center', 'Выравнивание по центру', true);
+
+insert into constuctor.css_class_item_params(id, id_params_css_class, name, value, description, active)
+overriding system value values(5, 2, 'Справо', 'start', 'Выравнивание справо', true);
+
+insert into constuctor.css_class_item_params(id, id_params_css_class, name, value, description, active)
+overriding system value values(6, 2, 'Слево', 'end', 'Выравнивание слево', true);
+
+insert into constuctor.css_class_item_params(id, id_params_css_class, name, value, description, active)
+overriding system value values(7, 2, 'Одинаковые отступы', 'space-between', 'Выравнивание каждого элемента с одинаковым отступом между друг другом', true)

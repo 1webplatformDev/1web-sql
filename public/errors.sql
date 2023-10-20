@@ -59,29 +59,35 @@ returns json
 $function$;
 
 -- dataset
-insert into public.errors (id, "name", description, id_proekt, status) 
-overriding system value values (1, 'Указанное const_name типа компонента уже существует', null, 2, 400);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(1, 'Указанное const_name типа компонента уже существует', null, 2, 400);
 
-insert into public.errors (id, "name", description, id_proekt, status) 
-overriding system value values (2, 'Указанное имя типа компонента уже существует', null, 2, 400);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(2, 'Указанное имя типа компонента уже существует', null, 2, 400);
 
-insert into public.errors (id, "name", description, id_proekt, status) 
-overriding system value values (3, 'Запись компонента с указаным id не существует', null, 2, 404);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(3, 'Запись компонента с указаным id не существует', null, 2, 404);
 
-insert into public.errors (id, "name", description, id_proekt, status)
-overriding system value values (4, 'Запись типа css с указаным id не существует', null, 2, 404);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(4, 'Запись типа css с указаным id не существует', null, 2, 404);
 
-insert into public.errors (id, "name", description, id_proekt, status)
-overriding system value values (5, 'Указанное имя типа css переменной уже существует', null, 2, 400);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(5, 'Указанное имя типа css переменной уже существует', null, 2, 400);
 
-insert into public.errors (id, "name", description, id_proekt, status)
-overriding system value values (6, 'Указанное const_name типа css переменной уже существует', null, 2, 400);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(6, 'Указанное const_name типа css переменной уже существует', null, 2, 400);
 
-insert into public.errors (id, "name", description, id_proekt, status)
-overriding system value values (7, 'Запись css class с указаным id не существует', null, 2, 404);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(7, 'Запись css class с указаным id не существует', null, 2, 404);
 
-insert into public.errors (id, "name", description, id_proekt, status)
-overriding system value values (8, 'Указанное имя css class уже существует', null, 2, 400);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(8, 'Указанное имя css class уже существует', null, 2, 400);
 
-insert into public.errors (id, "name", description, id_proekt, status)
-overriding system value values (9, 'params_css_class с указаным id не существует', null, 2, 404);
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(10, 'css_class_item_params с указаным id не существует', null, 2, 404);
+
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(11, 'Запись params_css_class с указаным id не существует', null, 2, 404);
+
+insert into public.errors(id, name, description, id_proekt, status)
+overriding system value values(12, 'Запись css_class_list_params  с указаным id не существует', null, 2, 404)

@@ -134,3 +134,11 @@ create or replace function constuctor.css_class_list_params_check_id(
 		end if;
 	end;
 $function$;
+
+-- dataset 
+
+insert into constuctor.css_class_list_params(id, name, description, active)
+overriding system value values(1, 'align_item', 'Список допустимых значении для выравнивание flex компонентов потомков по поперечной оси', true);
+
+insert into constuctor.css_class_list_params(id, name, description, active)
+overriding system value values(2, 'justify-content', 'Список допустимых значении для выравнивание flex компонентов потомков по главной оси', true)
