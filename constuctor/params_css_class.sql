@@ -15,6 +15,7 @@ create table constuctor.params_css_class (
     id int4 generated always as identity, -- Первичный ключ
     id_type_css_var int4 not null REFERENCES constuctor.type_css_var (id), -- Внешний ключ таблицы type_css_var
     id_css_class int4 not null REFERENCES constuctor.css_class (id), -- Внешний ключ таблицы css_class
+	id_css_class_list_params int4 REFERENCES constuctor.css_class_list_params (id), -- Внешний ключ таблицы css_class_list_params
     name varchar not null, -- Имя параметра css класса
     const_name varchar not null, -- const_name параметра css класса
     description varchar, -- Описание параметра css класса
@@ -87,6 +88,7 @@ drop function if exists constuctor.params_css_class_insert;
 create or replace function constuctor.params_css_class_insert(
 	in _id_type_css_var int4,
 	in _id_css_class int4,
+	in id_css_class_list_params int4,
 	in _name varchar,
 	in _const_name varchar,
 	in _description varchar = null,
@@ -98,6 +100,11 @@ create or replace function constuctor.params_css_class_insert(
 	as $function$
 	begin
 		select * into result_ from constuctor.type_css_var_check_id(_id => _id_type_css_var);
+
+		if _id_type_css_var <> 5 then -- очистка справочника ибо только у type_css_var = 5 (select) может существовать список допустимых значении
+			id_css_class_list_params = null;
+		end if;
+
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
@@ -107,6 +114,12 @@ create or replace function constuctor.params_css_class_insert(
 			return;
 		end if;
 
+		select * into result_ from constuctor.css_class_list_params_check_id(_id => id_css_class_list_params);
+		if (result_::json->'status_result')::text::int = 404 then
+			return;
+		end if;
+
+		
 		select * into result_ from constuctor.params_css_class_check_unieue();
 		if (result_::json->'status_result')::text::int = 200 then
 			insert into constuctor.params_css_class (id_type_css_var, id_css_class, name, const_name, description, active)
@@ -121,6 +134,7 @@ create or replace function constuctor.params_css_class_updated(
 	in _id int4,
 	in _id_type_css_var int4,
 	in _id_css_class int4,
+	in id_css_class_list_params int4,
 	in _name varchar,
 	in _const_name varchar,
 	in _description varchar,
@@ -135,12 +149,21 @@ create or replace function constuctor.params_css_class_updated(
 			return;
 		end if;
 
+		if _id_type_css_var <> 5 then -- очистка справочника ибо только у type_css_var = 5 (select) может существовать список допустимых значении
+			id_css_class_list_params = null;
+		end if;
+
 		select * into result_ from constuctor.type_css_var_check_id(_id => _id_type_css_var);
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
 
 		select * into result_ from constuctor.css_class_check_id(_id => _id_css_class);
+		if (result_::json->'status_result')::text::int = 404 then
+			return;
+		end if;
+
+		select * into result_ from constuctor.css_class_list_params_check_id(_id => id_css_class_list_params);
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
@@ -173,3 +196,46 @@ create or replace function constuctor.params_css_class_check_id(
 	end;
 $function$;
 
+-- dataset 
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(1, 3, 1, 'Цвет шрифта', '--component-color', 'Параметр определяющий цвет шрифта у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(2, 3, 1, 'Фон компонента', '--component-bg', 'Параметр определяющий цвет фона у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(3, 1, 1, 'Размер шрифта', '--component-fz', 'Параметр определяющий размер шрифта у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(4, 4, 1, 'Внутренние отступы', '--component-padding', 'Параметр определяющий размер внутриних отступов у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(5, 4, 1, 'Внутрение отступы', '--component-margin', 'Параметр определяющий размер внутрение отступов у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(6, 2, 1, 'Границы', '--component-border', 'Параметр определяющий границе у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(7, 1, 1, 'Ширина', '--component-width', 'Параметр определяющий ширина у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(8, 1, 1, 'Высота', '--component-height', 'Параметр определяющий высота у компонента', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(9, 5, 2, 'align-item', '--flex-ai', 'Выравнивание дочерних элементов по поперечной оси', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(10, 5, 2, 'justify-content', '--flex-jc', 'Выравнивание дочерних элементов по главной оси', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(11, 5, 2, 'justify-content', '--flex-jc', 'Определяется главная ось', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(12, 5, 2, 'Перенос компонентов', '--flex-w', 'Определяется главная ось', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(13, 1, 2, 'Оступы колонки', '--flex-col-g', 'Расстояние между компонентами потомками колонки', true);
+
+insert into constuctor.params_css_class(id, id_type_css_var, id_css_class, name, const_name, description, active)
+overriding system value values(14, 1, 2, 'Оступы строки', '--flex-row-g', 'Расстояние между компонентами потомками строки', true)
