@@ -14,7 +14,7 @@ drop table if exists constuctor.css_class cascade;
 
 create table constuctor.css_class (
     id int4 generated always as identity, -- Первичный ключ
-    id_type_component int4 not null REFERENCES constuctor.type_component (id), -- Внешний ключ таблицы type_component
+    id_type_component int4 REFERENCES constuctor.type_component (id), -- Внешний ключ таблицы type_component
     class_name varchar not null, -- Имя css class
     description varchar, -- Описание css class
     active boolean default true, -- Активность css class

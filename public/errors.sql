@@ -82,3 +82,6 @@ overriding system value values (7, 'Запись css class с указаным i
 
 insert into public.errors (id, "name", description, id_proekt, status)
 overriding system value values (8, 'Указанное имя css class уже существует', null, 2, 400);
+
+insert into public.errors (id, "name", description, id_proekt, status)
+overriding system value values (9, 'params_css_class с указаным id не существует', null, 2, 404);
