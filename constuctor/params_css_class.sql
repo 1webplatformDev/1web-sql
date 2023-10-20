@@ -163,7 +163,7 @@ create or replace function constuctor.params_css_class_check_id(
 	as $function$
 	declare
 		check_rows int;
-		error_id int = 7;
+		error_id int = 11;
 	begin
 		select * into result_ from public.create_error_ids(null, 200);
 		select count(*) into check_rows from constuctor.params_css_class_get_filter(_id => _id);
