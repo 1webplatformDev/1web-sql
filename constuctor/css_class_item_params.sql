@@ -5,6 +5,7 @@
 --select * from constuctor.css_class_item_params_get_filter;
 --select * from constuctor.css_class_item_params_updated;
 --select * from constuctor.css_class_item_params_check_id;
+-- select * from constuctor.css_class_item_params_get_json();
 
 -- Очистка
 
@@ -154,6 +155,33 @@ create or replace function constuctor.css_class_item_params_check_id(
 		if check_rows = 0 then
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 		end if;
+	end;
+$function$;
+
+drop function if exists constuctor.css_class_item_params_get_json;
+create or replace function constuctor.css_class_item_params_get_json(
+	in _id int4
+)
+	returns table(result_json json)
+	language plpgsql
+	as $function$
+	begin
+	return query select 
+		json_build_object(
+			'id', pcc.id, 'name', pcc."name", 'const_name', pcc.const_name, 'id_type_css_var', pcc.id_type_css_var,
+			'css_list', case when cclp.id is not null then json_build_object(
+			'id', cclp.id, 'name', cclp."name", 'description', cclp."description", 
+			'select',  (select  jsonb_agg( jsonb_build_object(
+					'id', ccip.id, 'name', ccip.name, 'value', ccip.value, 'description', ccip.description
+				)) 
+				from constuctor.css_class_item_params ccip 
+				where ccip.id_css_class_list_params = cclp.id and ccip.active = true
+			)
+			) else null end
+		) as result_json 
+		from  constuctor.params_css_class pcc 
+		left join constuctor.css_class_list_params cclp ON pcc.id_css_class_list_params = cclp.id 
+		where pcc.id_css_class = _id and pcc.active = true;
 	end;
 $function$;
 
