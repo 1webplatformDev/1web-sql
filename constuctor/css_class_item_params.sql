@@ -22,7 +22,7 @@ create table constuctor.css_class_item_params (
 	constraint css_class_item_params_pk primary key (id)
 );
 --  comments
-comment on table constuctor.css_class_item_params is 'Элемент список для css параметров класса';
+comment on table constuctor.css_class_item_params is 'Элемент список для css параметров класса, применяется у params_css_class с type_css_var = 5(select) и у которого задан ключ внешний таблицы id_css_class_list_params';
 
 comment on column constuctor.css_class_item_params.id is 'Первичный ключ';
 comment on column constuctor.css_class_item_params.id_css_class_list_params is 'Внешний ключ таблицы css_class_list_params';

@@ -272,3 +272,6 @@ overriding system value values(25, 'Вкладки', 'Вкладки, показ
 
 insert into constuctor.type_component(id, name, description, active, const_name)
 overriding system value values(26, 'График', 'График', true, 'chart')
+
+insert into constuctor.type_component(id, name, description, active, const_name)
+overriding system value values(27, 'Перенос', 'Перенос строки', true, 'br')

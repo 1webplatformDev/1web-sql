@@ -24,7 +24,7 @@ create table constuctor.css_class (
 create unique index css_class_class_name_idx on constuctor.css_class using btree (class_name);
 
 --  comments
-comment on table constuctor.css_class is 'css класс';
+comment on table constuctor.css_class is 'css класс, нужен для возможности задать допустимый класс любому компоненту';
 
 comment on column constuctor.css_class.id is 'Первичный ключ';
 comment on column constuctor.css_class.id_type_component is 'Внешний ключ таблицы type_component';

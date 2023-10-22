@@ -23,7 +23,7 @@ create table constuctor.params_css_class (
 	constraint params_css_class_pk primary key (id)
 );
 --  comments
-comment on table constuctor.params_css_class is 'параметры css классов';
+comment on table constuctor.params_css_class is 'параметры css классов, нужен для возможности задать css переменные, дает возможность из 1 класса получаться разные результаты стилей';
 
 comment on column constuctor.params_css_class.id is 'Первичный ключ';
 comment on column constuctor.params_css_class.id_type_css_var is 'Внешний ключ таблицы type_css_var';

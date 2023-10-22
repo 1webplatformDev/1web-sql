@@ -24,7 +24,7 @@ create unique index type_css_var_name_idx on constuctor.type_css_var using btree
 create unique index type_css_var_const_name_idx on constuctor.type_css_var using btree (const_name);
 
 --  comments
-comment on table constuctor.type_css_var is 'Тип css переменной';
+comment on table constuctor.type_css_var is 'Тип css переменной, нужен для возможности определить тип css переменной отображаемый в таблице params_css_class';
 
 comment on column constuctor.type_css_var.id is 'Первичный ключ';
 comment on column constuctor.type_css_var.name is 'Имя типа css переменной';
