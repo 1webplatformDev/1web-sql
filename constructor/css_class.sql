@@ -201,8 +201,8 @@ $function$;
 
 -- dataset
 
-insert into constuctor.css_class(id, id_type_component, class_name, description, active)
+insert into constructor.css_class(id, id_type_component, class_name, description, active)
 overriding system value values(1, null, 'component', 'Базовый класс применяемый к любому компоненту', true);
 
-insert into constuctor.css_class(id, id_type_component, class_name, description, active)
+insert into constructor.css_class(id, id_type_component, class_name, description, active)
 overriding system value values(2, null, 'flex', 'Базовый класс применяющий к flex элементам', true);
