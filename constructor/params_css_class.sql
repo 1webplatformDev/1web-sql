@@ -1,6 +1,5 @@
 -- fun
 
---select * from constructor.params_css_class_check_unieue;
 --select * from constructor.params_css_class_insert;
 --select * from constructor.params_css_class_get_filter;
 --select * from constructor.params_css_class_updated;
@@ -64,26 +63,6 @@ create or replace function constructor.params_css_class_get_filter(
 	end;
 $function$;
 
-drop function if exists constructor.params_css_class_check_unieue;
-create or replace function constructor.params_css_class_check_unieue(
-	in _id int4 = null,
-	out errors_ json
-)
-	language plpgsql
-	as $function$
-	declare
-		error_array int[];
-	begin
-
-		if array_length(error_array, 1) <> 0 then
-			select * into errors_ from public.create_error_ids(error_array, 400);
-			return;
-		end if;
-
-		select * into errors_ from public.create_error_json(null, 200);
-	end;
-$function$;
-
 drop function if exists constructor.params_css_class_insert;
 create or replace function constructor.params_css_class_insert(
 	in _id_type_css_var int4,
@@ -119,13 +98,9 @@ create or replace function constructor.params_css_class_insert(
 			return;
 		end if;
 
-		
-		select * into result_ from constructor.params_css_class_check_unieue();
-		if (result_::json->'status_result')::text::int = 200 then
-			insert into constructor.params_css_class (id_type_css_var, id_css_class, name, const_name, description, active)
-			values (_id_type_css_var, _id_css_class, _name, _const_name, _description, _active)
-			returning id into id_;
-		end if;
+		insert into constructor.params_css_class (id_type_css_var, id_css_class, name, const_name, description, active)
+		values (_id_type_css_var, _id_css_class, _name, _const_name, _description, _active)
+		returning id into id_;
 	end;
 $function$;
 
@@ -168,12 +143,9 @@ create or replace function constructor.params_css_class_updated(
 			return;
 		end if;
 
-		select * into result_ from constructor.params_css_class_check_unieue( _id => _id);
-		if (result_::json->'status_result')::text::int = 200 then
-			update constructor.params_css_class
-			set id_type_css_var = _id_type_css_var, id_css_class = _id_css_class, name = _name, const_name = _const_name, description = _description, active = _active
-			where id = _id;
-		end if;
+		update constructor.params_css_class
+		set id_type_css_var = _id_type_css_var, id_css_class = _id_css_class, name = _name, const_name = _const_name, description = _description, active = _active
+		where id = _id;
 	end;
 $function$;
 

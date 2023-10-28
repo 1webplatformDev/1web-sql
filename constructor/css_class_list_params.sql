@@ -1,6 +1,5 @@
 -- fun
 
---select * from constructor.css_class_list_params_check_unieue;
 --select * from constructor.css_class_list_params_insert;
 --select * from constructor.css_class_list_params_get_filter;
 --select * from constructor.css_class_list_params_updated;
@@ -51,26 +50,6 @@ create or replace function constructor.css_class_list_params_get_filter(
 	end;
 $function$;
 
-drop function if exists constructor.css_class_list_params_check_unieue;
-create or replace function constructor.css_class_list_params_check_unieue(
-	in _id int4 = null,
-	out errors_ json
-)
-	language plpgsql
-	as $function$
-	declare
-		error_array int[];
-	begin
-
-		if array_length(error_array, 1) <> 0 then
-			select * into errors_ from public.create_error_ids(error_array, 400);
-			return;
-		end if;
-
-		select * into errors_ from public.create_error_json(null, 200);
-	end;
-$function$;
-
 drop function if exists constructor.css_class_list_params_insert;
 create or replace function constructor.css_class_list_params_insert(
 	in _name varchar,
@@ -82,12 +61,9 @@ create or replace function constructor.css_class_list_params_insert(
 	language plpgsql
 	as $function$
 	begin
-		select * into result_ from constructor.css_class_list_params_check_unieue();
-		if (result_::json->'status_result')::text::int = 200 then
-			insert into constructor.css_class_list_params (name, description, active)
-			values (_name, _description, _active)
-			returning id into id_;
-		end if;
+		insert into constructor.css_class_list_params (name, description, active)
+		values (_name, _description, _active)
+		returning id into id_;
 	end;
 $function$;
 
@@ -106,13 +82,10 @@ create or replace function constructor.css_class_list_params_updated(
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
-
-		select * into result_ from constructor.css_class_list_params_check_unieue( _id => _id);
-		if (result_::json->'status_result')::text::int = 200 then
-			update constructor.css_class_list_params
-			set name = _name, description = _description, active = _active
-			where id = _id;
-		end if;
+		
+		update constructor.css_class_list_params
+		set name = _name, description = _description, active = _active
+		where id = _id;
 	end;
 $function$;
 
