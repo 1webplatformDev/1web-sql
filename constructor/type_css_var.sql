@@ -175,4 +175,4 @@ insert into constructor.type_css_var(id, name, description, active, const_name)
 overriding system value values(4, 'Отступы', 'Отступы', true, 'margin/padding');
 
 insert into constructor.type_css_var(id, name, description, active, const_name)
-overriding system value values(5, 'Список значении', 'Свойство с ограниченным списком значения', true, 'select')
+overriding system value values(5, 'Список значении', 'Свойство с ограниченным списком значения', true, 'select');

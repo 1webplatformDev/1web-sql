@@ -238,4 +238,4 @@ insert into constructor.params_css_class(id, id_type_css_var, id_css_class, id_c
 overriding system value values(13, 1, 2, null, 'Оступы колонки', '--flex-col-g', 'Расстояние между компонентами потомками колонки', true);
 
 insert into constructor.params_css_class(id, id_type_css_var, id_css_class, id_css_class_list_params, name, const_name, description, active)
-overriding system value values(14, 1, 2, null, 'Оступы строки', '--flex-row-g', 'Расстояние между компонентами потомками строки', true)
+overriding system value values(14, 1, 2, null, 'Оступы строки', '--flex-row-g', 'Расстояние между компонентами потомками строки', true);

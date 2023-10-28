@@ -206,4 +206,4 @@ insert into constructor.css_class_item_params(id, id_css_class_list_params, name
 overriding system value values(6, 2, 'Слево', 'end', 'Выравнивание слево', true);
 
 insert into constructor.css_class_item_params(id, id_css_class_list_params, name, value, description, active)
-overriding system value values(7, 2, 'Одинаковые отступы', 'space-between', 'Выравнивание каждого элемента с одинаковым отступом между друг другом', true)
+overriding system value values(7, 2, 'Одинаковые отступы', 'space-between', 'Выравнивание каждого элемента с одинаковым отступом между друг другом', true);

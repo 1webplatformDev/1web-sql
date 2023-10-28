@@ -271,7 +271,7 @@ insert into constructor.type_component(id, name, description, active, const_name
 overriding system value values(25, 'Вкладки', 'Вкладки, показывают контент закрепленный за ними', true, 'tab');
 
 insert into constructor.type_component(id, name, description, active, const_name)
-overriding system value values(26, 'График', 'График', true, 'chart')
+overriding system value values(26, 'График', 'График', true, 'chart');
 
 insert into constructor.type_component(id, name, description, active, const_name)
-overriding system value values(27, 'Перенос', 'Перенос строки', true, 'br')
+overriding system value values(27, 'Перенос', 'Перенос строки', true, 'br');
