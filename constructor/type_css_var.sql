@@ -1,6 +1,6 @@
 -- fun
 
---select * from constructor.type_css_var_check_unieue;
+--select * from constructor.type_css_var_check_unique;
 --select * from constructor.type_css_var_insert;
 --select * from constructor.type_css_var_get_filter;
 --select * from constructor.type_css_var_updated;
@@ -59,8 +59,8 @@ create or replace function constructor.type_css_var_get_filter(
 	end;
 $function$;
 
-drop function if exists constructor.type_css_var_check_unieue;
-create or replace function constructor.type_css_var_check_unieue(
+drop function if exists constructor.type_css_var_check_unique;
+create or replace function constructor.type_css_var_check_unique(
 	in _id int4 = null,
 	in _name varchar = null,
 	in _const_name varchar = null,
@@ -107,7 +107,7 @@ create or replace function constructor.type_css_var_insert(
 	language plpgsql
 	as $function$
 	begin
-		select * into result_ from constructor.type_css_var_check_unieue(_name => _name, _const_name => _const_name);
+		select * into result_ from constructor.type_css_var_check_unique(_name => _name, _const_name => _const_name);
 		if (result_::json->'status_result')::text::int = 200 then
 			insert into constructor.type_css_var (name, description, active, const_name)
 			values (_name, _description, _active, _const_name)
@@ -133,7 +133,7 @@ create or replace function constructor.type_css_var_updated(
 			return;
 		end if;
 
-		select * into result_ from constructor.type_css_var_check_unieue(_name => _name, _const_name => _const_name, _id => _id);
+		select * into result_ from constructor.type_css_var_check_unique(_name => _name, _const_name => _const_name, _id => _id);
 		if (result_::json->'status_result')::text::int = 200 then
 			update constructor.type_css_var
 			set name = _name, description = _description, active = _active, const_name = _const_name

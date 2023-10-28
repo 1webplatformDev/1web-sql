@@ -1,6 +1,6 @@
 -- fun
 
---select * from constructor.css_class_check_unieue;
+--select * from constructor.css_class_check_unique;
 --select * from constructor.css_class_insert;
 --select * from constructor.css_class_get_filter;
 --select * from constructor.css_class_updated;
@@ -59,8 +59,8 @@ create or replace function constructor.css_class_get_filter(
 	end;
 $function$;
 
-drop function if exists constructor.css_class_check_unieue;
-create or replace function constructor.css_class_check_unieue(
+drop function if exists constructor.css_class_check_unique;
+create or replace function constructor.css_class_check_unique(
 	in _id int4 = null,
 	in _class_name varchar = null,
 	out errors_ json
@@ -104,7 +104,7 @@ create or replace function constructor.css_class_insert(
 			return;
 		end if;
 
-		select * into result_ from constructor.css_class_check_unieue(_class_name => _class_name);
+		select * into result_ from constructor.css_class_check_unique(_class_name => _class_name);
 		if (result_::json->'status_result')::text::int = 200 then
 			insert into constructor.css_class (id_type_component, class_name, description, active)
 			values (_id_type_component, _class_name, _description, _active)
@@ -135,7 +135,7 @@ create or replace function constructor.css_class_updated(
 			return;
 		end if;
 
-		select * into result_ from constructor.css_class_check_unieue(_class_name => _class_name, _id => _id);
+		select * into result_ from constructor.css_class_check_unique(_class_name => _class_name, _id => _id);
 		if (result_::json->'status_result')::text::int = 200 then
 			update constructor.css_class
 			set id_type_component = _id_type_component, class_name = _class_name, description = _description, active = _active

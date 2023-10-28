@@ -1,6 +1,6 @@
 -- fun
 
--- select * from constructor.type_component_check_unieue;
+-- select * from constructor.type_component_check_unique;
 -- select * from constructor.type_component_insert;
 -- select * from constructor.type_component_get_unique;
 -- select * from constructor.type_component_updated;
@@ -46,8 +46,8 @@ create type constructor.return_type_component as (
 
 -- function
 
-drop function if exists constructor.type_component_check_unieue;
-create or replace function constructor.type_component_check_unieue(
+drop function if exists constructor.type_component_check_unique;
+create or replace function constructor.type_component_check_unique(
 	in _name varchar,
 	in _const_name varchar,
 	in _id int = null,
@@ -93,7 +93,7 @@ create or replace function constructor.type_component_insert(
 	language  plpgsql
 	as $function$
     begin 
-		select * into result_ from constructor.type_component_check_unieue(_name, _const_name);
+		select * into result_ from constructor.type_component_check_unique(_name, _const_name);
 		if (result_::json->'status_result')::text::int = 200 then
 			insert into constructor.type_component
         	(name, const_name, description) values (_name, _const_name, _description)
@@ -121,7 +121,7 @@ create or replace function constructor.type_component_updated(
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 			return;
 		end if;
-	   	select * into result_ from constructor.type_component_check_unieue(_name, _const_name, _id);
+	   	select * into result_ from constructor.type_component_check_unique(_name, _const_name, _id);
 	   	if (result_::json->'status_result')::text::int = 200 then
 	   	 	UPDATE constructor.type_component
 			SET name = _name, const_name = _const_name, description = _description
