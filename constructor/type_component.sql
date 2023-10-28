@@ -1,17 +1,17 @@
 -- fun
 
--- select * from constuctor.type_component_check_unieue;
--- select * from constuctor.type_component_insert;
--- select * from constuctor.type_component_get_unique;
--- select * from constuctor.type_component_updated;
--- select * from constuctor.type_component_get_filter;
--- select * from constuctor.type_component_check_id
+-- select * from constructor.type_component_check_unieue;
+-- select * from constructor.type_component_insert;
+-- select * from constructor.type_component_get_unique;
+-- select * from constructor.type_component_updated;
+-- select * from constructor.type_component_get_filter;
+-- select * from constructor.type_component_check_id
 
 -- Очистка
-drop table if exists constuctor.type_component cascade;
--- ALTER SEQUENCE constuctor.type_component_id_seq RESTART WITH 1;
+drop table if exists constructor.type_component cascade;
+-- ALTER SEQUENCE constructor.type_component_id_seq RESTART WITH 1;
 
-create table constuctor.type_component (
+create table constructor.type_component (
 	id int4 not null generated always as identity, -- Первичный ключ
 	"name" varchar not null, -- Название типа компонента
 	description varchar null, -- Описание типа компонента
@@ -21,22 +21,22 @@ create table constuctor.type_component (
 	constraint type_component_pk primary key (id)
 );
 
-create unique index type_component_const_name_idx on constuctor.type_component using btree (const_name);
-create unique index type_component_name_idx on constuctor.type_component using btree (name);
+create unique index type_component_const_name_idx on constructor.type_component using btree (const_name);
+create unique index type_component_name_idx on constructor.type_component using btree (name);
 
 --  comments
-comment on table constuctor.type_component is 'Тип компонента';
+comment on table constructor.type_component is 'Тип компонента';
 
-comment on column constuctor.type_component.id is 'Первичный ключ';
-comment on column constuctor.type_component."name" is 'Название типа компонента';
-comment on column constuctor.type_component.description is 'Описание типа компонента';
-comment on column constuctor.type_component.active is 'Актуальность типа компонента';
-comment on column constuctor.type_component.const_name is 'Программное название типа компонента';
+comment on column constructor.type_component.id is 'Первичный ключ';
+comment on column constructor.type_component."name" is 'Название типа компонента';
+comment on column constructor.type_component.description is 'Описание типа компонента';
+comment on column constructor.type_component.active is 'Актуальность типа компонента';
+comment on column constructor.type_component.const_name is 'Программное название типа компонента';
 
 -- type
 
-drop type if exists constuctor.return_type_component cascade;
-create type constuctor.return_type_component as (
+drop type if exists constructor.return_type_component cascade;
+create type constructor.return_type_component as (
 	id int, 
 	name varchar, 
 	description varchar, 
@@ -46,8 +46,8 @@ create type constuctor.return_type_component as (
 
 -- function
 
-drop function if exists constuctor.type_component_check_unieue;
-create or replace function constuctor.type_component_check_unieue(
+drop function if exists constructor.type_component_check_unieue;
+create or replace function constructor.type_component_check_unieue(
 	in _name varchar,
 	in _const_name varchar,
 	in _id int = null,
@@ -62,8 +62,8 @@ create or replace function constuctor.type_component_check_unieue(
 		error_id_name int = 2;
 		error_array int[];
     begin 
-	    select count(*) into count_name from constuctor.type_component_get_filter(null, null, _name, null, _id);
-	   	select count(*) into count_const_name from constuctor.type_component_get_filter(null, null, null, _const_name, _id);
+	    select count(*) into count_name from constructor.type_component_get_filter(null, null, _name, null, _id);
+	   	select count(*) into count_const_name from constructor.type_component_get_filter(null, null, null, _const_name, _id);
 
 	   	if count_name <> 0 then
 			error_array = array_append(error_array, error_id_const_name);
@@ -82,8 +82,8 @@ create or replace function constuctor.type_component_check_unieue(
     end;
 $function$;
 
-drop function if exists constuctor.type_component_insert();
-create or replace function constuctor.type_component_insert(
+drop function if exists constructor.type_component_insert();
+create or replace function constructor.type_component_insert(
 	in _name varchar,
 	in _const_name varchar,
 	in _description varchar,
@@ -93,17 +93,17 @@ create or replace function constuctor.type_component_insert(
 	language  plpgsql
 	as $function$
     begin 
-		select * into result_ from constuctor.type_component_check_unieue(_name, _const_name);
+		select * into result_ from constructor.type_component_check_unieue(_name, _const_name);
 		if (result_::json->'status_result')::text::int = 200 then
-			insert into constuctor.type_component
+			insert into constructor.type_component
         	(name, const_name, description) values (_name, _const_name, _description)
         	returning id into id_;
 	   end if;
     end;
 $function$;
 
-drop function if exists constuctor.type_component_updated;
-create or replace function constuctor.type_component_updated(
+drop function if exists constructor.type_component_updated;
+create or replace function constructor.type_component_updated(
 	in _id int,
 	in _name varchar,
 	in _const_name varchar,
@@ -116,35 +116,35 @@ create or replace function constuctor.type_component_updated(
 		check_rows int;
 		error_id int = 3;
     begin
-		select count(*) into check_rows from constuctor.type_component_get_filter(_id);
+		select count(*) into check_rows from constructor.type_component_get_filter(_id);
 		if check_rows = 0 then
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 			return;
 		end if;
-	   	select * into result_ from constuctor.type_component_check_unieue(_name, _const_name, _id);
+	   	select * into result_ from constructor.type_component_check_unieue(_name, _const_name, _id);
 	   	if (result_::json->'status_result')::text::int = 200 then
-	   	 	UPDATE constuctor.type_component
+	   	 	UPDATE constructor.type_component
 			SET name = _name, const_name = _const_name, description = _description
 			where id = _id;  
 	   	end if;
     end;
 $function$;
 
-drop function if exists constuctor.type_component_get_filter;
-create or replace function constuctor.type_component_get_filter(
+drop function if exists constructor.type_component_get_filter;
+create or replace function constructor.type_component_get_filter(
 	_id int = null,
 	_active bool = null,
 	_name varchar = null,
 	_const_name varchar = null,
 	_no_id int = null
 )
-	returns SETOF constuctor.return_type_component
+	returns SETOF constructor.return_type_component
 	language  plpgsql
 	as $function$
     begin 
         return query 
         	select tc.id, tc."name", tc.description, tc.active, tc.const_name  
-       		from constuctor.type_component tc 
+       		from constructor.type_component tc 
        		where (tc.id = _id or _id is null) 
 			and (tc.id <> _no_id or _no_id is null) 
        		and (tc.const_name = _const_name or _const_name is null)
@@ -153,8 +153,8 @@ create or replace function constuctor.type_component_get_filter(
     end;
 $function$;
 
-drop function if exists constuctor.type_component_get_unique;
-create or replace function constuctor.type_component_get_unique(
+drop function if exists constructor.type_component_get_unique;
+create or replace function constructor.type_component_get_unique(
 	_column_name varchar,
 	_id int = null,
 	_active bool = null,
@@ -168,15 +168,15 @@ create or replace function constuctor.type_component_get_unique(
 	    if _column_name in ('name', 'const_name') then
 	    	return query EXECUTE 
 	    		format(
-	    			'select id, %s from (select * from constuctor.type_component_get_filter(%2$L, %3$L, %4$L, %5$L)) as tc', 
+	    			'select id, %s from (select * from constructor.type_component_get_filter(%2$L, %3$L, %4$L, %5$L)) as tc', 
 					_column_name, _id, _active, _name, _const_name
 				);
 	    end if;
     end;
 $function$;
 
-drop function if exists constuctor.type_component_check_id;
-create or replace function constuctor.type_component_check_id(
+drop function if exists constructor.type_component_check_id;
+create or replace function constructor.type_component_check_id(
 	in _id int4,
 	out result_ json
 )
@@ -187,7 +187,7 @@ create or replace function constuctor.type_component_check_id(
 		error_id int = 3;
 	begin
 		select * into result_ from public.create_error_ids(null, 200);
-		select count(*) into check_rows from constuctor.type_component_get_filter(_id => _id);
+		select count(*) into check_rows from constructor.type_component_get_filter(_id => _id);
 		if check_rows = 0 then
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 		end if;
@@ -195,83 +195,83 @@ create or replace function constuctor.type_component_check_id(
 $function$;
 
 -- dataset 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(1, 'Блочный элемент', 'Блочный элемент', true, 'div');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(2, 'Текстовый элемент', 'Текстовый элемент', true, 'span');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(3, 'Поле ввода', 'Поле ввода', true, 'input');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(4, 'Выпадающий список', 'Выпадающий список', true, 'select');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(5, 'Пункты списка', 'Пункты списка', true, 'option');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(6, 'Таблица', 'Таблица', true, 'table');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(7, 'Изображение', 'Изображение', true, 'img');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(8, 'Чекбокс ', 'Флажок, флаговая кнопка, чекбокс', true, 'chekcbox');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(9, 'Кнопка', 'Кнопка', true, 'button');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(10, 'Многострочное поле ввода', 'Многострочное поле ввода', true, 'textarea');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(11, 'Метка', 'Подпись к элементу пользовательского интерфейса', true, 'label');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(12, 'Поле ввода файла', 'Поле ввода файла', true, 'file');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(13, 'Поле ввода цвета', 'Поле ввода цвета', true, 'color');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(14, 'Группа радиокнопок', 'Группа радиокнопок', true, 'radio');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(15, 'Переключатель', 'Переключатель', true, 'toggle');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(16, 'Форма', 'Форма ', true, 'form');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(17, 'Аккордеон', 'Контейнер со сворачиваемыми вкладками', true, 'accordion');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(18, 'Сообщение', 'Сообщение', true, 'alert');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(19, 'Всплывающиее окно', 'Всплывающиее окно', true, 'popover');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(20, 'Модальная форма', 'Модальная форма', true, 'modal');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(21, 'Ссылка', 'Ссылка на другую страницу', true, 'link');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(22, 'Заголовки', 'Заголовки', true, 'h');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(23, 'Вопрос', 'Окно задающий вопрос пользователю', true, 'message');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(24, 'Прелоадер', 'Элемент показывающий загрузку происходящего', true, 'preloader');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(25, 'Вкладки', 'Вкладки, показывают контент закрепленный за ними', true, 'tab');
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(26, 'График', 'График', true, 'chart')
 
-insert into constuctor.type_component(id, name, description, active, const_name)
+insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(27, 'Перенос', 'Перенос строки', true, 'br')

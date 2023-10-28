@@ -1,17 +1,17 @@
 -- fun
 
---select * from constuctor.type_css_var_check_unieue;
---select * from constuctor.type_css_var_insert;
---select * from constuctor.type_css_var_get_filter;
---select * from constuctor.type_css_var_updated;
---select * from constuctor.type_css_var_check_id;
+--select * from constructor.type_css_var_check_unieue;
+--select * from constructor.type_css_var_insert;
+--select * from constructor.type_css_var_get_filter;
+--select * from constructor.type_css_var_updated;
+--select * from constructor.type_css_var_check_id;
 
 -- Очистка
 
-drop table if exists constuctor.type_css_var cascade;
--- alter sequence constuctor.type_css_var_id_seq restart with 1;
+drop table if exists constructor.type_css_var cascade;
+-- alter sequence constructor.type_css_var_id_seq restart with 1;
 
-create table constuctor.type_css_var (
+create table constructor.type_css_var (
     id int4 generated always as identity, -- Первичный ключ
     name varchar not null, -- Имя типа css переменной
     description varchar, -- Описание типа css переменной
@@ -20,22 +20,22 @@ create table constuctor.type_css_var (
 	constraint type_css_var_pk primary key (id)
 );
 
-create unique index type_css_var_name_idx on constuctor.type_css_var using btree (name);
-create unique index type_css_var_const_name_idx on constuctor.type_css_var using btree (const_name);
+create unique index type_css_var_name_idx on constructor.type_css_var using btree (name);
+create unique index type_css_var_const_name_idx on constructor.type_css_var using btree (const_name);
 
 --  comments
-comment on table constuctor.type_css_var is 'Тип css переменной, нужен для возможности определить тип css переменной отображаемый в таблице params_css_class';
+comment on table constructor.type_css_var is 'Тип css переменной, нужен для возможности определить тип css переменной отображаемый в таблице params_css_class';
 
-comment on column constuctor.type_css_var.id is 'Первичный ключ';
-comment on column constuctor.type_css_var.name is 'Имя типа css переменной';
-comment on column constuctor.type_css_var.description is 'Описание типа css переменной';
-comment on column constuctor.type_css_var.active is 'Активность типа css переменной';
-comment on column constuctor.type_css_var.const_name is 'Программное название типа css переменной';
+comment on column constructor.type_css_var.id is 'Первичный ключ';
+comment on column constructor.type_css_var.name is 'Имя типа css переменной';
+comment on column constructor.type_css_var.description is 'Описание типа css переменной';
+comment on column constructor.type_css_var.active is 'Активность типа css переменной';
+comment on column constructor.type_css_var.const_name is 'Программное название типа css переменной';
 
 -- function
 
-drop function if exists constuctor.type_css_var_get_filter;
-create or replace function constuctor.type_css_var_get_filter(
+drop function if exists constructor.type_css_var_get_filter;
+create or replace function constructor.type_css_var_get_filter(
 	_id int4 = null,
 	_name varchar = null,
 	_active boolean = null,
@@ -44,12 +44,12 @@ create or replace function constuctor.type_css_var_get_filter(
 	_limit int = null,
 	_offset int = null
 )
-	returns SETOF constuctor.type_css_var
+	returns SETOF constructor.type_css_var
 	language plpgsql
 	as $function$
 	begin
 		return query 
-			select * from constuctor.type_css_var tcv
+			select * from constructor.type_css_var tcv
 			where (tcv.id = _id or _id is null)
 			and (tcv.id <> _no_id or _no_id is null)
 			and (tcv.name = _name or _name is null)
@@ -59,8 +59,8 @@ create or replace function constuctor.type_css_var_get_filter(
 	end;
 $function$;
 
-drop function if exists constuctor.type_css_var_check_unieue;
-create or replace function constuctor.type_css_var_check_unieue(
+drop function if exists constructor.type_css_var_check_unieue;
+create or replace function constructor.type_css_var_check_unieue(
 	in _id int4 = null,
 	in _name varchar = null,
 	in _const_name varchar = null,
@@ -75,8 +75,8 @@ create or replace function constuctor.type_css_var_check_unieue(
 		error_id_const_name int = 6;
 		error_array int[];
 	begin
-		select count(*) into count_name from constuctor.type_css_var_get_filter(_name => _name, _no_id => _id);
-		select count(*) into count_const_name from constuctor.type_css_var_get_filter(_const_name => _const_name, _no_id => _id);
+		select count(*) into count_name from constructor.type_css_var_get_filter(_name => _name, _no_id => _id);
+		select count(*) into count_const_name from constructor.type_css_var_get_filter(_const_name => _const_name, _no_id => _id);
 
 		if count_name <> 0 then
 			error_array = array_append(error_array, error_id_name);
@@ -95,8 +95,8 @@ create or replace function constuctor.type_css_var_check_unieue(
 	end;
 $function$;
 
-drop function if exists constuctor.type_css_var_insert;
-create or replace function constuctor.type_css_var_insert(
+drop function if exists constructor.type_css_var_insert;
+create or replace function constructor.type_css_var_insert(
 	in _name varchar,
 	in _const_name varchar,
 	in _description varchar = null,
@@ -107,17 +107,17 @@ create or replace function constuctor.type_css_var_insert(
 	language plpgsql
 	as $function$
 	begin
-		select * into result_ from constuctor.type_css_var_check_unieue(_name => _name, _const_name => _const_name);
+		select * into result_ from constructor.type_css_var_check_unieue(_name => _name, _const_name => _const_name);
 		if (result_::json->'status_result')::text::int = 200 then
-			insert into constuctor.type_css_var (name, description, active, const_name)
+			insert into constructor.type_css_var (name, description, active, const_name)
 			values (_name, _description, _active, _const_name)
 			returning id into id_;
 		end if;
 	end;
 $function$;
 
-drop function if exists constuctor.type_css_var_updated;
-create or replace function constuctor.type_css_var_updated(
+drop function if exists constructor.type_css_var_updated;
+create or replace function constructor.type_css_var_updated(
 	in _id int4,
 	in _name varchar,
 	in _description varchar,
@@ -128,22 +128,22 @@ create or replace function constuctor.type_css_var_updated(
 	language plpgsql
 	as $function$
 	begin
-		select * into result_ from constuctor.type_css_var_check_id(_id => _id);
+		select * into result_ from constructor.type_css_var_check_id(_id => _id);
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
 
-		select * into result_ from constuctor.type_css_var_check_unieue(_name => _name, _const_name => _const_name, _id => _id);
+		select * into result_ from constructor.type_css_var_check_unieue(_name => _name, _const_name => _const_name, _id => _id);
 		if (result_::json->'status_result')::text::int = 200 then
-			update constuctor.type_css_var
+			update constructor.type_css_var
 			set name = _name, description = _description, active = _active, const_name = _const_name
 			where id = _id;
 		end if;
 	end;
 $function$;
 
-drop function if exists constuctor.type_css_var_check_id;
-create or replace function constuctor.type_css_var_check_id(
+drop function if exists constructor.type_css_var_check_id;
+create or replace function constructor.type_css_var_check_id(
 	in _id int4,
 	out result_ json
 )
@@ -154,7 +154,7 @@ create or replace function constuctor.type_css_var_check_id(
 		error_id int = 4;
 	begin
 		select * into result_ from public.create_error_ids(null, 200);
-		select count(*) into check_rows from constuctor.type_css_var_get_filter(_id => _id);
+		select count(*) into check_rows from constructor.type_css_var_get_filter(_id => _id);
 		if check_rows = 0 then
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 		end if;
@@ -162,17 +162,17 @@ create or replace function constuctor.type_css_var_check_id(
 $function$;
 
 
-insert into constuctor.type_css_var(id, name, description, active, const_name)
+insert into constructor.type_css_var(id, name, description, active, const_name)
 overriding system value values(1, 'Единица измерения', 'Размер ширины, высоты, позиции элементов и др. что вводится значения число и ед. размера(px, %, em,rem и тд) ', true, 'size');
 
-insert into constuctor.type_css_var(id, name, description, active, const_name)
+insert into constructor.type_css_var(id, name, description, active, const_name)
 overriding system value values(2, 'Граница', 'Граница', true, 'border');
 
-insert into constuctor.type_css_var(id, name, description, active, const_name)
+insert into constructor.type_css_var(id, name, description, active, const_name)
 overriding system value values(3, 'Цвет', 'Цвет', true, 'color');
 
-insert into constuctor.type_css_var(id, name, description, active, const_name)
+insert into constructor.type_css_var(id, name, description, active, const_name)
 overriding system value values(4, 'Отступы', 'Отступы', true, 'margin/padding');
 
-insert into constuctor.type_css_var(id, name, description, active, const_name)
+insert into constructor.type_css_var(id, name, description, active, const_name)
 overriding system value values(5, 'Список значении', 'Свойство с ограниченным списком значения', true, 'select')

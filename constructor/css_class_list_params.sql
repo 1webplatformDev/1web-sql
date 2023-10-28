@@ -1,17 +1,17 @@
 -- fun
 
---select * from constuctor.css_class_list_params_check_unieue;
---select * from constuctor.css_class_list_params_insert;
---select * from constuctor.css_class_list_params_get_filter;
---select * from constuctor.css_class_list_params_updated;
---select * from constuctor.css_class_list_params_check_id;
+--select * from constructor.css_class_list_params_check_unieue;
+--select * from constructor.css_class_list_params_insert;
+--select * from constructor.css_class_list_params_get_filter;
+--select * from constructor.css_class_list_params_updated;
+--select * from constructor.css_class_list_params_check_id;
 
 -- Очистка
 
-drop table if exists constuctor.css_class_list_params cascade;
--- alter sequence constuctor.css_class_list_params_id_seq restart with 1;
+drop table if exists constructor.css_class_list_params cascade;
+-- alter sequence constructor.css_class_list_params_id_seq restart with 1;
 
-create table constuctor.css_class_list_params (
+create table constructor.css_class_list_params (
     id int4 generated always as identity, -- Первичный ключ
     name varchar not null, -- Имя списка для параметра css класса
     description varchar, -- Описание списка для параметра css класса
@@ -19,17 +19,17 @@ create table constuctor.css_class_list_params (
 	constraint css_class_list_params_pk primary key (id)
 );
 --  comments
-comment on table constuctor.css_class_list_params is 'Список для css params, применяется у params_css_class с type_css_var = 5(select)';
+comment on table constructor.css_class_list_params is 'Список для css params, применяется у params_css_class с type_css_var = 5(select)';
 
-comment on column constuctor.css_class_list_params.id is 'Первичный ключ';
-comment on column constuctor.css_class_list_params.name is 'Имя списка для параметра css класса';
-comment on column constuctor.css_class_list_params.description is 'Описание списка для параметра css класса';
-comment on column constuctor.css_class_list_params.active is 'Активность списка для параметра css класса';
+comment on column constructor.css_class_list_params.id is 'Первичный ключ';
+comment on column constructor.css_class_list_params.name is 'Имя списка для параметра css класса';
+comment on column constructor.css_class_list_params.description is 'Описание списка для параметра css класса';
+comment on column constructor.css_class_list_params.active is 'Активность списка для параметра css класса';
 
 -- function
 
-drop function if exists constuctor.css_class_list_params_get_filter;
-create or replace function constuctor.css_class_list_params_get_filter(
+drop function if exists constructor.css_class_list_params_get_filter;
+create or replace function constructor.css_class_list_params_get_filter(
 	_id int4 = null,
 	_name varchar = null,
 	_active boolean = null,
@@ -37,12 +37,12 @@ create or replace function constuctor.css_class_list_params_get_filter(
 	_limit int = null,
 	_offset int = null
 )
-	returns SETOF constuctor.css_class_list_params
+	returns SETOF constructor.css_class_list_params
 	language plpgsql
 	as $function$
 	begin
 		return query 
-			select * from constuctor.css_class_list_params cclp
+			select * from constructor.css_class_list_params cclp
 			where (cclp.id = _id or _id is null)
 			and (cclp.id <> _no_id or _no_id is null)
 			and (cclp.name = _name or _name is null)
@@ -51,8 +51,8 @@ create or replace function constuctor.css_class_list_params_get_filter(
 	end;
 $function$;
 
-drop function if exists constuctor.css_class_list_params_check_unieue;
-create or replace function constuctor.css_class_list_params_check_unieue(
+drop function if exists constructor.css_class_list_params_check_unieue;
+create or replace function constructor.css_class_list_params_check_unieue(
 	in _id int4 = null,
 	out errors_ json
 )
@@ -71,8 +71,8 @@ create or replace function constuctor.css_class_list_params_check_unieue(
 	end;
 $function$;
 
-drop function if exists constuctor.css_class_list_params_insert;
-create or replace function constuctor.css_class_list_params_insert(
+drop function if exists constructor.css_class_list_params_insert;
+create or replace function constructor.css_class_list_params_insert(
 	in _name varchar,
 	in _description varchar = null,
 	in _active boolean = true,
@@ -82,17 +82,17 @@ create or replace function constuctor.css_class_list_params_insert(
 	language plpgsql
 	as $function$
 	begin
-		select * into result_ from constuctor.css_class_list_params_check_unieue();
+		select * into result_ from constructor.css_class_list_params_check_unieue();
 		if (result_::json->'status_result')::text::int = 200 then
-			insert into constuctor.css_class_list_params (name, description, active)
+			insert into constructor.css_class_list_params (name, description, active)
 			values (_name, _description, _active)
 			returning id into id_;
 		end if;
 	end;
 $function$;
 
-drop function if exists constuctor.css_class_list_params_updated;
-create or replace function constuctor.css_class_list_params_updated(
+drop function if exists constructor.css_class_list_params_updated;
+create or replace function constructor.css_class_list_params_updated(
 	in _id int4,
 	in _name varchar,
 	in _description varchar,
@@ -102,22 +102,22 @@ create or replace function constuctor.css_class_list_params_updated(
 	language plpgsql
 	as $function$
 	begin
-		select * into result_ from constuctor.css_class_list_params_check_id(_id => _id);
+		select * into result_ from constructor.css_class_list_params_check_id(_id => _id);
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;
 
-		select * into result_ from constuctor.css_class_list_params_check_unieue( _id => _id);
+		select * into result_ from constructor.css_class_list_params_check_unieue( _id => _id);
 		if (result_::json->'status_result')::text::int = 200 then
-			update constuctor.css_class_list_params
+			update constructor.css_class_list_params
 			set name = _name, description = _description, active = _active
 			where id = _id;
 		end if;
 	end;
 $function$;
 
-drop function if exists constuctor.css_class_list_params_check_id;
-create or replace function constuctor.css_class_list_params_check_id(
+drop function if exists constructor.css_class_list_params_check_id;
+create or replace function constructor.css_class_list_params_check_id(
 	in _id int4,
 	out result_ json
 )
@@ -128,7 +128,7 @@ create or replace function constuctor.css_class_list_params_check_id(
 		error_id int = 12;
 	begin
 		select * into result_ from public.create_error_ids(null, 200);
-		select count(*) into check_rows from constuctor.css_class_list_params_get_filter(_id => _id);
+		select count(*) into check_rows from constructor.css_class_list_params_get_filter(_id => _id);
 		if check_rows = 0 then
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 		end if;
@@ -137,8 +137,8 @@ $function$;
 
 -- dataset 
 
-insert into constuctor.css_class_list_params(id, name, description, active)
+insert into constructor.css_class_list_params(id, name, description, active)
 overriding system value values(1, 'align_item', 'Список допустимых значении для выравнивание flex компонентов потомков по поперечной оси', true);
 
-insert into constuctor.css_class_list_params(id, name, description, active)
+insert into constructor.css_class_list_params(id, name, description, active)
 overriding system value values(2, 'justify-content', 'Список допустимых значении для выравнивание flex компонентов потомков по главной оси', true)
