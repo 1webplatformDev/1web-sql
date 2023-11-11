@@ -217,7 +217,7 @@ insert into constructor.type_component(id, name, description, active, const_name
 overriding system value values(7, 'Изображение', 'Изображение', true, 'img');
 
 insert into constructor.type_component(id, name, description, active, const_name)
-overriding system value values(8, 'Чекбокс ', 'Флажок, флаговая кнопка, чекбокс', true, 'chekcbox');
+overriding system value values(8, 'Чекбокс ', 'Флажок, флаговая кнопка, чекбокс', true, 'checkbox');
 
 insert into constructor.type_component(id, name, description, active, const_name)
 overriding system value values(9, 'Кнопка', 'Кнопка', true, 'button');
