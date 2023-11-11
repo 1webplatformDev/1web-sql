@@ -125,7 +125,7 @@ create or replace function constructor.type_component_updated(
 	   	if (result_::json->'status_result')::text::int = 200 then
 	   	 	UPDATE constructor.type_component
 			SET name = _name, const_name = _const_name, description = _description
-			where id = _id;  
+			where id = _id;
 	   	end if;
     end;
 $function$;
