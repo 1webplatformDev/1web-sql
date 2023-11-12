@@ -90,4 +90,13 @@ insert into public.errors(id, name, description, id_project, status)
 overriding system value values(11, 'Запись params_css_class с указаным id не существует', null, 2, 404);
 
 insert into public.errors(id, name, description, id_project, status)
-overriding system value values(12, 'Запись css_class_list_params  с указаным id не существует', null, 2, 404)
+overriding system value values(12, 'Запись css_class_list_params  с указаным id не существует', null, 2, 404);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(13, 'Запись типа параметра компонента с указаным id не существует', null, 2, 404);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(14, 'Указанный const_name тип параметра компонента уже существует', null, 2, 400);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(15, 'Указанное имя тип параметра компонента уже существует', null, 2, 400);
