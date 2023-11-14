@@ -114,7 +114,8 @@ create or replace function constructor.component_params_insert(
 	language plpgsql
 	as $function$
 	declare 
-	begin 		select * into result_ from constructor.component_params_type_check_id(_id => _id_component_params_type);
+	begin 		
+		select * into result_ from constructor.component_params_type_check_id(_id => _id_component_params_type);
 		if (result_::json->'status_result')::text::int = 404 then
 			return;
 		end if;

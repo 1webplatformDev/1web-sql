@@ -100,3 +100,15 @@ overriding system value values(14, 'Указанный const_name тип пар�
 
 insert into public.errors(id, name, description, id_project, status)
 overriding system value values(15, 'Указанное имя тип параметра компонента уже существует', null, 2, 400);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(16, 'Запись параметр компонента с указаным id не существует', null, 2, 404);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(17, 'Указанное имя параметра компонента уже существует', null, 2, 400);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(18, 'Запись события компонента с указаным id не существует', null, 2, 404);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(19, 'Указанное const_name события компонента уже существует', null, 2, 400);

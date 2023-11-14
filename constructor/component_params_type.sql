@@ -11,7 +11,7 @@ create table constructor.component_params_type (
 create unique index component_params_type_name_idx on constructor.component_params_type  using btree (name);    
 create unique index component_params_type_const_name_idx on constructor.component_params_type  using btree (const_name);
 
-comment on table constructor.component_params_type is 'Параметры компонента';
+comment on table constructor.component_params_type is 'Тип параметра компонента';
 
 comment on column constructor.component_params_type.id is 'Первичный ключ';
 comment on column constructor.component_params_type.name is 'name типа параметра компонента';
