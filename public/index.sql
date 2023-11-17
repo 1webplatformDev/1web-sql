@@ -11,7 +11,7 @@ AS $function$
 	begin
 		return query 
 		select 
-			array(select unnest(array_) intersect select unnest(array_ids)) as id_save, 
-			array(select unnest(array_) except select unnest(array_ids)) as id_error;
+			array(select unnest(array_) intersect select unnest(array_ids)) as element_intersect, 
+			array(select unnest(array_) except select unnest(array_ids)) as element_except;
 	end;
 $function$;
