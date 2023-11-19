@@ -14,7 +14,10 @@ create or replace function tec.get_fun_in_params(
             jsonb_agg(
                 jsonb_build_object(
                     'name', p.parameter_name,
-                    'type', p.data_type 
+                    'type', 
+                    case when p.udt_name = '_json' then 'json[]'
+                        when p.udt_name = '_int4' then 'int4[]'
+                        else p.udt_name end  
                 )
             ) as params
         from information_schema.routines r
