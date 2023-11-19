@@ -6,11 +6,16 @@ create or replace function tec.get_fun_in_params(
     schema_ varchar[],
     entity_ varchar
 )
-	returns table (fun_name information_schema.sql_identifier, params jsonb)
+	returns table (
+		fun_name information_schema.sql_identifier, 
+		schema_name information_schema.sql_identifier, 
+		params jsonb
+)
 	language plpgsql
 	as $function$
 	begin
         return query select r.routine_name as fun_name,
+        r.routine_schema as schema_name,
             jsonb_agg(
                 jsonb_build_object(
                     'name', p.parameter_name,
@@ -26,6 +31,6 @@ create or replace function tec.get_fun_in_params(
         and r.routine_schema = any(schema_)
         and p.parameter_mode = 'IN'
         and r.routine_name like(entity_ || '%')
-        group by fun_name;
+        group by fun_name, schema_name;
 	end;
 $function$;
