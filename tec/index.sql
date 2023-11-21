@@ -20,9 +20,9 @@ create or replace function tec.get_fun_in_params(
                 jsonb_build_object(
                     'name', p.parameter_name,
                     'type', 
-                    case when p.udt_name = '_json' then 'json[]'
-                        when p.udt_name = '_int4' then 'int4[]'
-                        else p.udt_name end  
+                    case when p.udt_name like '\_%' 
+                        then ltrim(p.udt_name, '_') || '[]'
+                    else p.udt_name end  
                 )
             ) as params
         from information_schema.routines r
