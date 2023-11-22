@@ -42,7 +42,6 @@ create or replace function public.create_error_json(
     	return json_build_object('errors', _error, 'status_result', _status); 
 	end;
 $function$;
- 
 
 drop function if exists public.create_error_ids;
 create or replace function public.create_error_ids(_ids int[], _status int = null)
@@ -55,6 +54,46 @@ returns json
 		));
     begin 
     	return (select * from public.create_error_json(errors, _status));
+	end;
+$function$;
+
+drop function if exists public.create_result_ids_json;
+create or replace function public.create_result_ids_json(
+	_wargin int[] = null,
+	_info int[] = null, 
+	_errors int[] = null,
+	_status int = 200
+)
+	returns json
+	language  plpgsql
+	as $function$
+	declare	
+		errors json[] = (select ARRAY(select row_to_json(res) from (
+			select e.id, e.name, e.description from public.errors e where e.id = any(_errors)) as res 
+		));
+		wargin json[] = (select ARRAY(select row_to_json(res) from (
+			select e.id, e.name, e.description from public.errors e where e.id = any(_wargin)) as res 
+		));
+		info json[] = (select ARRAY(select row_to_json(res) from (
+			select e.id, e.name, e.description from public.errors e where e.id = any(_info)) as res 
+		));
+    begin 
+    	return json_build_object('errors', errors, 'wargin', wargin, 'info', info, 'status_result', _status); 
+	end;
+$function$;
+
+drop function if exists public.create_result_json;
+create or replace function public.create_result_json(
+	_wargin json[] = null,
+	_info json[] = null, 
+	_errors json[] = null,
+	_status int = 200
+)
+	returns json
+	language  plpgsql
+	as $function$
+	begin
+    	return json_build_object('errors', _errors, 'wargin', _wargin, 'info', _info, 'status_result', _status); 
 	end;
 $function$;
 
