@@ -201,10 +201,10 @@ insert into constructor.params_css_class(id, id_type_css_var, id_css_class, id_c
 overriding system value values(10, 5, 2, 2, 'justify-content', '--flex-jc', 'Выравнивание дочерних элементов по главной оси', true);
 
 insert into constructor.params_css_class(id, id_type_css_var, id_css_class, id_css_class_list_params, name, const_name, description, active)
-overriding system value values(11, 5, 2, null, 'justify-content', '--flex-jc', 'Определяется главная ось', true);
+overriding system value values(11, 5, 2, null, 'flex-direction', '--flex-jc', 'Определяется главная ось', true);
 
 insert into constructor.params_css_class(id, id_type_css_var, id_css_class, id_css_class_list_params, name, const_name, description, active)
-overriding system value values(12, 5, 2, null, 'Перенос компонентов', '--flex-w', 'Определяется главная ось', true);
+overriding system value values(12, 5, 2, null, 'Перенос компонентов', '--flex-w', 'Перенос компонентов', true);
 
 insert into constructor.params_css_class(id, id_type_css_var, id_css_class, id_css_class_list_params, name, const_name, description, active)
 overriding system value values(13, 1, 2, null, 'Оступы колонки', '--flex-col-g', 'Расстояние между компонентами потомками колонки', true);
