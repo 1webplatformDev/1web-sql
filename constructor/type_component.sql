@@ -6,6 +6,7 @@
 -- select * from constructor.type_component_updated;
 -- select * from constructor.type_component_get_filter;
 -- select * from constructor.type_component_check_id
+-- select * from constructor.type_component_check_array_id
 
 -- Очистка
 drop table if exists constructor.type_component cascade;
@@ -191,6 +192,32 @@ create or replace function constructor.type_component_check_id(
 		if check_rows = 0 then
 			select * into result_ from public.create_error_ids(array[error_id], 404);
 		end if;
+	end;
+$function$;
+
+
+drop function if exists constructor.type_component_check_array_id;
+create or replace function constructor.type_component_check_array_id(
+	ids_ integer[],
+	out _result_ids integer[],
+	out _result json
+)
+	returns record
+	language plpgsql
+	as $function$
+	declare 
+		error_text varchar = 'id не будут сохранены они не существуют: {1}';
+		error_ids int[];
+		warning_json json[];
+	begin 
+		select array_agg(tc.id) into _result_ids from constructor.type_component tc where tc.id = any(ids_);
+		select array(select unnest(ids_) except select unnest(_result_ids)) into error_ids;
+		if array_length(error_ids, 1) <> 0 then
+			select array(select json_build_object('name', replace(error_text, '{1}', array_to_string(error_ids, ',')))) into warning_json;
+			select * into _result from public.create_result_json(_warning => warning_json);
+			return;
+		end if;
+		select * into _result from public.create_result_json();
 	end;
 $function$;
 
