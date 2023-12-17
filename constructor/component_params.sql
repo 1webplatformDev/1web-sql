@@ -128,8 +128,15 @@ create or replace function constructor.component_params_insert(
 			return;
 		end if;
 
-		select _result_ids, _result into _ids_type_component, result_
+		select _result_ids, _result into _ids_type_component, error_text
 		from constructor.type_component_check_array_id(_ids_type_component);
+		if error_text is not null then
+			errors_text = array_append(errors_text, error_text);
+		end if;
+
+		if array_length(errors_text, 1) <> 0 then
+			select * into result_ from create_result_json(_warning => errors_text);
+		end if;
 		
 		insert into constructor.component_params (const_name, id_component_params_type, select_list, description, active) 
 		values (_const_name, _id_component_params_type, _select_list, _description, _active)
@@ -168,8 +175,15 @@ create or replace function constructor.component_params_updated(
 			return;
 		end if;
 
-		select _result_ids, _result into _ids_type_component, result_
+		select _result_ids, _result into _ids_type_component, error_text
 		from constructor.type_component_check_array_id(_ids_type_component);
+		if error_text is not null then
+			errors_text = array_append(errors_text, error_text);
+		end if;
+
+		if array_length(errors_text, 1) <> 0 then
+			select * into result_ from create_result_json(_warning => errors_text);
+		end if;
 
 		update constructor.component_params
 		set const_name = _const_name, id_component_params_type = _id_component_params_type, select_list = _select_list, description = _description, active = _active

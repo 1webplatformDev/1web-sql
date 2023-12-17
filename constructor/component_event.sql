@@ -105,14 +105,23 @@ create or replace function constructor.component_event_insert(
 	language plpgsql
 	as $function$
 	declare 
+		errors_text json[];
+		error_text json;
 	begin 
 		select * into result_ from constructor.component_event_check_unique(_const_name => _const_name);
 		if (result_::json->'status_result')::text::int = 400 then
 			return;
 		end if;
 
-		select _result_ids, _result into _ids_type_component, result_
+		select _result_ids, _result into _ids_type_component, error_text
 		from constructor.type_component_check_array_id(_ids_type_component);
+		if error_text is not null then
+			errors_text = array_append(errors_text, error_text);
+		end if;
+
+		if array_length(errors_text, 1) <> 0 then
+			select * into result_ from create_result_json(_warning => errors_text);
+		end if;
 
 		insert into constructor.component_event (const_name, ids_type_component, description, active) 
 		values (_const_name, _ids_type_component, _description, _active)
@@ -133,6 +142,8 @@ create or replace function constructor.component_event_updated(
 	language plpgsql
 	as $function$
 	declare 
+		errors_text json[];
+		error_text json;
 	begin 
 		select * into result_ from constructor.component_event_check_id(_id => _id);
 		if (result_::json->'status_result')::text::int = 404 then
@@ -144,8 +155,15 @@ create or replace function constructor.component_event_updated(
 			return;
 		end if;
 
-		select _result_ids, _result into _ids_type_component, result_
+		select _result_ids, _result into _ids_type_component, error_text
 		from constructor.type_component_check_array_id(_ids_type_component);
+		if error_text is not null then
+			errors_text = array_append(errors_text, error_text);
+		end if;
+
+		if array_length(errors_text, 1) <> 0 then
+			select * into result_ from create_result_json(_warning => errors_text);
+		end if;
 
 		update constructor.component_event
 		set const_name = _const_name, ids_type_component = _ids_type_component, description = _description, active = _active

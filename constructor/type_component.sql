@@ -199,7 +199,7 @@ $function$;
 drop function if exists constructor.type_component_check_array_id;
 create or replace function constructor.type_component_check_array_id(
 	in ids_ integer[],
-	in error_text_ varchar = 'Следующие указанные типы компонентов не были найдены и не сохранились: {1}'
+	in error_text_ varchar = 'Следующие указанные типы компонентов не были найдены и не сохранились: {1}',
 	out _result_ids integer[],
 	out _result varchar
 )
@@ -212,7 +212,7 @@ create or replace function constructor.type_component_check_array_id(
 		select array_agg(tc.id) into _result_ids from constructor.type_component tc where tc.id = any(ids_);
 		select array(select unnest(ids_) except select unnest(_result_ids)) into error_ids;
 		if array_length(error_ids, 1) <> 0 then
-			select replace(error_text_, '{1}', array_to_string(error_ids, ',')) into _result;
+			select json_build_object('name', replace(error_text_, '{1}', array_to_string(error_ids, ','))) into _result;
 			return;
 		end if;
 		_result = null;
