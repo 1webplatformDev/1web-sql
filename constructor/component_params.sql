@@ -6,6 +6,7 @@ create table constructor.component_params (
 	select_list json, -- Список значений параметра компонента в виде {id: name}
 	description varchar, -- Описание параметра компонента
 	active boolean default true, -- Активность параметра компонента
+	ids_type_component int4 [], -- Массив внешних ключей таблицы type_component
 	constraint component_params_pk primary key (id)
 );
 
@@ -19,6 +20,7 @@ comment on column constructor.component_params.id_component_params_type is 'Вн
 comment on column constructor.component_params.select_list is 'Список значений параметра компонента в виде {id: name}';
 comment on column constructor.component_params.description is 'Описание параметра компонента';
 comment on column constructor.component_params.active is 'Активность параметра компонента';
+comment on column constructor.component_params.ids_type_component is 'Массив внешних ключей таблицы type_component';
 
 drop function if exists constructor.component_params_get_filter;
 create or replace function constructor.component_params_get_filter(
@@ -104,6 +106,7 @@ drop function if exists constructor.component_params_insert;
 create or replace function constructor.component_params_insert(
 	in _const_name varchar,
 	in _id_component_params_type int4 = null,
+	in _ids_type_component int4[] = null,
 	in _select_list json = null,
 	in _description varchar = null,
 	in _active boolean = true,
@@ -125,6 +128,9 @@ create or replace function constructor.component_params_insert(
 			return;
 		end if;
 
+		select _result_ids, _result into _ids_type_component, result_
+		from constructor.type_component_check_array_id(_ids_type_component);
+		
 		insert into constructor.component_params (const_name, id_component_params_type, select_list, description, active) 
 		values (_const_name, _id_component_params_type, _select_list, _description, _active)
 		returning id into id_;
@@ -136,6 +142,7 @@ create or replace function constructor.component_params_updated(
 	in _id int4,
 	in _const_name varchar,
 	in _id_component_params_type int4 = null,
+	in _ids_type_component int4[] = null,
 	in _select_list json = null,
 	in _description varchar = null,
 	in _active boolean = true,
@@ -160,6 +167,9 @@ create or replace function constructor.component_params_updated(
 		if (result_::json->'status_result')::text::int = 400 then
 			return;
 		end if;
+
+		select _result_ids, _result into _ids_type_component, result_
+		from constructor.type_component_check_array_id(_ids_type_component);
 
 		update constructor.component_params
 		set const_name = _const_name, id_component_params_type = _id_component_params_type, select_list = _select_list, description = _description, active = _active
