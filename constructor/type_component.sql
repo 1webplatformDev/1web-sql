@@ -198,26 +198,24 @@ $function$;
 
 drop function if exists constructor.type_component_check_array_id;
 create or replace function constructor.type_component_check_array_id(
-	ids_ integer[],
+	in ids_ integer[],
+	in error_text_ varchar = 'Следующие указанные типы компонентов не были найдены и не сохранились: {1}'
 	out _result_ids integer[],
-	out _result json
+	out _result varchar
 )
 	returns record
 	language plpgsql
 	as $function$
 	declare 
-		error_text varchar = 'id не будут сохранены они не существуют: {1}';
 		error_ids int[];
-		warning_json json[];
 	begin 
 		select array_agg(tc.id) into _result_ids from constructor.type_component tc where tc.id = any(ids_);
 		select array(select unnest(ids_) except select unnest(_result_ids)) into error_ids;
 		if array_length(error_ids, 1) <> 0 then
-			select array(select json_build_object('name', replace(error_text, '{1}', array_to_string(error_ids, ',')))) into warning_json;
-			select * into _result from public.create_result_json(_warning => warning_json);
+			select replace(error_text_, '{1}', array_to_string(error_ids, ',')) into _result;
 			return;
 		end if;
-		select * into _result from public.create_result_json();
+		_result = null;
 	end;
 $function$;
 
