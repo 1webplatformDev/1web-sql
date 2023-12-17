@@ -32,11 +32,11 @@ create or replace function constructor.component_event_get_filter(
 	as $function$
 	declare 
 	begin 
-		return query select * from constructor.component_event e
-			where (e.id <> _no_id or _no_id is null)
-				and(e.id = _id or _id is null)
-				and(e.const_name = _const_name or _const_name is null)
-				and(e.active = _active or _active is null)
+		return query select * from constructor.component_event ce
+			where (ce.id <> _no_id or _no_id is null)
+				and(ce.id = _id or _id is null)
+				and(ce.const_name = _const_name or _const_name is null)
+				and(ce.active = _active or _active is null)
 			limit _limit offset _offset;
 	end;
 $function$;
@@ -106,12 +106,13 @@ create or replace function constructor.component_event_insert(
 	as $function$
 	declare 
 	begin 
-		
-
 		select * into result_ from constructor.component_event_check_unique(_const_name => _const_name);
 		if (result_::json->'status_result')::text::int = 400 then
 			return;
 		end if;
+
+		select _result_ids, _result into _ids_type_component, result_
+		from constructor.type_component_check_array_id(_ids_type_component);
 
 		insert into constructor.component_event (const_name, ids_type_component, description, active) 
 		values (_const_name, _ids_type_component, _description, _active)
@@ -143,9 +144,11 @@ create or replace function constructor.component_event_updated(
 			return;
 		end if;
 
+		select _result_ids, _result into _ids_type_component, result_
+		from constructor.type_component_check_array_id(_ids_type_component);
+
 		update constructor.component_event
 		set const_name = _const_name, ids_type_component = _ids_type_component, description = _description, active = _active
 		where id = _id;
 	end;
 $function$;
- 
