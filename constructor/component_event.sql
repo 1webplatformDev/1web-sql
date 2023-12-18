@@ -170,3 +170,29 @@ create or replace function constructor.component_event_updated(
 		where id = _id;
 	end;
 $function$;
+
+-- dataset
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(1, 'click', 5,9,21, 'Событие обработки на клик', true);
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(2, 'focus', null, 'Событие фокус на компоненте', true);
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(3, 'blur', null, 'Событие потеря фокуса на компоненте', true);
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(4, 'keydown', null, 'Событие нажатия на клавишу', true);
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(5, 'keyup', null, 'Событие отпускание клавиши', true);
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(6, 'mouseover', null, 'Событие наведение мышкой на компонент', true);
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(7, 'mouseout', null, 'Событие уходамышки из компонента', true);
+
+insert into constructor.component_event(id, const_name, ids_type_component, description, active)
+overriding system value values(8, 'input', 3,4,8,10,12,13,14,15, 'Событие изменения значения у компонента', true);
