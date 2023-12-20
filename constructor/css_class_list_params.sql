@@ -115,3 +115,9 @@ overriding system value values(1, 'align_item', 'Список допустимы
 
 insert into constructor.css_class_list_params(id, name, description, active)
 overriding system value values(2, 'justify-content', 'Список допустимых значении для выравнивание flex компонентов потомков по главной оси', true);
+
+insert into constructor.css_class_list_params(id, name, description, active)
+overriding system value values(4, 'flex-direction', 'Список допустимых значении для  изменения положения flex потомков компонентов', true);
+
+insert into constructor.css_class_list_params(id, name, description, active)
+overriding system value values(3, 'flex-wrap', 'Список допустимых значении для переноса flex компонентов потомков на новую строчку', true);

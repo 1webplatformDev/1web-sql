@@ -162,3 +162,17 @@ create or replace function constructor.component_params_type_updated(
 		where id = _id;
 	end;
 $function$;
+
+-- dataset
+
+insert into constructor.component_params_type(id, name, const_name, description, active)
+overriding system value values(1, 'Поле ввода', 'input_type', 'тип компонента ввод символьного значения', true);
+
+insert into constructor.component_params_type(id, name, const_name, description, active)
+overriding system value values(2, 'Числовое поле', 'number_type', 'тип компонента ввод числовых значении', true);
+
+insert into constructor.component_params_type(id, name, const_name, description, active)
+overriding system value values(3, 'Выпадающий выбор', 'select_type', 'тип компонента предлагающий выбрать 1 значения из определенного заданого диапозона', true);
+
+insert into constructor.component_params_type(id, name, const_name, description, active)
+overriding system value values(4, 'Множественный выпадающий выбор', 'select_multiple_type', 'тип компонента предлагающий выбрать несколько значения из определенного заданого диапозона', true);

@@ -180,3 +180,15 @@ overriding system value values(6, 2, 'Слево', 'end', 'Выравниван�
 
 insert into constructor.css_class_item_params(id, id_css_class_list_params, name, value, description, active)
 overriding system value values(7, 2, 'Одинаковые отступы', 'space-between', 'Выравнивание каждого элемента с одинаковым отступом между друг другом', true);
+
+insert into constructor.css_class_item_params(id, id_css_class_list_params, name, value, description, active)
+overriding system value values(8, 3, 'Не переносить', 'nowrap', 'Не переносить', true);
+
+insert into constructor.css_class_item_params(id, id_css_class_list_params, name, value, description, active)
+overriding system value values(9, 3, 'Переносить', 'wrap', 'Переносить', true);
+
+insert into constructor.css_class_item_params(id, id_css_class_list_params, name, value, description, active)
+overriding system value values(10, 4, 'В строку', 'row', 'Положение flex компонентов потомков в строчку', true);
+
+insert into constructor.css_class_item_params(id, id_css_class_list_params, name, value, description, active)
+overriding system value values(11, 4, 'В колонку', 'column', 'Положение flex компонентов потомков в колонку', true);
