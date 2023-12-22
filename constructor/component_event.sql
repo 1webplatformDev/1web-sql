@@ -195,4 +195,4 @@ insert into constructor.component_event(id, const_name, ids_type_component, desc
 overriding system value values(7, 'mouseout', null, 'Событие уходамышки из компонента', true);
 
 insert into constructor.component_event(id, const_name, ids_type_component, description, active)
-overriding system value values(8, 'input', 3,4,8,10,12,13,14,15, 'Событие изменения значения у компонента', true);
+overriding system value values(8, 'input', 	'{3,4,8,10,12,13,14,15}', 'Событие изменения значения у компонента', true);

@@ -176,3 +176,6 @@ overriding system value values(3, 'Выпадающий выбор', 'select_typ
 
 insert into constructor.component_params_type(id, name, const_name, description, active)
 overriding system value values(4, 'Множественный выпадающий выбор', 'select_multiple_type', 'тип компонента предлагающий выбрать несколько значения из определенного заданого диапозона', true);
+
+insert into constructor.component_params_type(id, name, const_name, description, active)
+overriding system value values(5, 'Набор компонентов', 'component_type', 'тип компонента которые состоит из списка существующий компонентов', true);

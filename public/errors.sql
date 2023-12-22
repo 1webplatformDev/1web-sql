@@ -151,3 +151,12 @@ overriding system value values(18, 'Запись события компонен
 
 insert into public.errors(id, name, description, id_project, status)
 overriding system value values(19, 'Указанное const_name события компонента уже существует', null, 2, 400);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(21, 'Запись метода компонента с указаным id не существует', null, 2, 404);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(22, 'Указанное const_name метода компонента уже существует', null, 2, 400);
+
+insert into public.errors(id, name, description, id_project, status)
+overriding system value values(23, 'Указанное name метода компонента уже существует', null, 2, 400);
