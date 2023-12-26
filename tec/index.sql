@@ -1,9 +1,9 @@
 CREATE SCHEMA tec AUTHORIZATION postgres;
 COMMENT ON SCHEMA tec IS 'Техническая схема (для разработчиков)';
 
--- получить входящие параметры функции
-drop function if exists tec.get_fun_in_params;
-create or replace function tec.get_fun_in_params(
+-- получить входящие параметры функции для создания комментариев
+drop function if exists tec.get_fun_in_params_comment;
+create or replace function tec.get_fun_in_params_comment(
     schema_ varchar[],
     entity_ varchar
 )
