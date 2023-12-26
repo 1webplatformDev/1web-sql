@@ -37,6 +37,7 @@ create or replace function tec.get_fun_in_params(
 $function$;
 
 -- получить первичный ключ в таблице
+drop function if exists tec.get_column_FK;
 CREATE OR REPLACE FUNCTION tec.get_column_FK(table_schema_ character varying, table_name_ character varying)
  RETURNS TABLE(column_name varchar)
  LANGUAGE plpgsql
@@ -45,5 +46,34 @@ AS $function$
         return query select c.column_name::varchar
         from information_schema.columns c
         where table_schema=table_schema_ and table_name = table_name_ and is_identity = 'YES';
+	end;
+$function$;
+
+-- получить список схем
+drop function if exists tec.get_schema;
+CREATE OR REPLACE FUNCTION tec.get_schema(_search varchar = null)
+ RETURNS TABLE(name varchar)
+ LANGUAGE plpgsql
+AS $function$
+	begin
+        return query select schema_name::varchar as name
+        from information_schema.schemata s 
+        where s.schema_name not in ('information_schema', 'pg_catalog', 'pg_toast', 'temp') and (s.schema_name like '%' || _search || '%' or _search is null);
+	end;
+$function$;
+
+-- получить список таблиц по таблице
+drop function if exists tec.get_tables;
+CREATE OR REPLACE FUNCTION tec.get_tables(_schema varchar, _search varchar = null)
+ RETURNS TABLE(id varchar)
+ LANGUAGE plpgsql
+AS $function$
+	begin
+        return query select table_name::varchar as id 
+        from information_schema.tables t 
+        where 
+            t.table_schema not in ('information_schema', 'pg_catalog', 'pg_toast', 'temp')
+            and t.table_schema = _schema 
+            and (t.table_name like '%' || _search || '%' or _search is null); 
 	end;
 $function$;
